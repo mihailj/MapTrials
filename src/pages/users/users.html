@@ -1,0 +1,52 @@
+<!--
+  Generated template for the Users page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Users</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="addUserModal()"><ion-icon name="add"></ion-icon>Add User</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <h2>
+        <ion-icon name="people"></ion-icon>
+        Users list
+      </h2>
+    </ion-item>
+
+    <ion-item-sliding *ngFor="let item of users">
+      <ion-item>
+  		  <button ion-button (click)="openUserModal({obj: item})">
+  			   {{item.username}}
+  		  </button>
+        <ion-note item-right>
+           Score: <strong>{{item.score}}</strong>
+        </ion-note>
+      </ion-item>
+
+      <ion-item-options>
+        <button ion-button (click)="editUser(item)" color="light">
+            <ion-icon name="paper"></ion-icon>
+            Edit
+        </button>
+        <button ion-button (click)="deleteUser(item)" color="danger">
+            <ion-icon name="trash"></ion-icon>
+            Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+
+  </ion-list>
+</ion-content>

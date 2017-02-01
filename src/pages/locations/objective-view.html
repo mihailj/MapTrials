@@ -1,0 +1,68 @@
+<ion-header>
+<ion-toolbar>
+  <ion-title>
+    Objective Info
+  </ion-title>
+  <ion-buttons start>
+    <button ion-button (click)="dismissObjective()">
+    <ion-icon name="close-circle"></ion-icon>&nbsp;<span color="primary">Close Objective</span>
+    </button>
+  </ion-buttons>
+</ion-toolbar>
+</ion-header>
+<ion-content>
+<ion-list>
+    <ion-item>
+      <h2>
+        <ion-icon name="flame"></ion-icon>
+        {{objective.title}}
+      </h2>
+
+      <p>Added by: <strong>{{objective.mt_user.username}}</strong><br>on <strong>{{ objective.date_added | date: 'dd/MM/yyyy HH:mm:ss' }}</strong></p>
+
+      <ion-note item-right>
+         Score: <strong>{{objective.score}}</strong>
+      </ion-note>
+    </ion-item>
+    <ion-item>
+      <p>
+        <button ion-button (click)="geolocateObjective()">
+          Geolocalize
+        </button>
+      </p>
+      <p>
+        <button ion-button (click)="takePicture('camera')">
+          Take picture with camera
+        </button>
+      </p>
+      <p>
+        <button ion-button (click)="takePicture('library')">
+          Load picture from gallery
+        </button>
+      </p>
+    </ion-item>
+    <ion-item *ngIf="pathForLastImage">
+      <p>
+        Latest Picture:<br>
+        <img [src]="pathForLastImage" style="width: 100%">
+      </p>
+    </ion-item>
+    <ion-item *ngIf="coordinates">
+      <p>
+        Coordinates: <strong>{{coordinates}}</strong>
+      </p>
+    </ion-item>
+    <ion-item *ngIf="this.config.DEBUG || (coordinates && pathForLastImage)">
+      <ion-label floating>Enter a comment</ion-label>
+      <ion-input type="text" [(ngModel)]="comment" value=""></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="this.config.DEBUG || (coordinates && pathForLastImage)">
+      <p>
+        <button ion-button (click)="completeObjective()">
+          Complete objective
+        </button>
+      </p>
+    </ion-item>
+  </ion-list>
+</ion-content>

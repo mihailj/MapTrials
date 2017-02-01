@@ -1,0 +1,24 @@
+<!--
+  Generated template for the Locations page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Map
+    </ion-title>
+    <ion-buttons end>
+      <button *ngIf="(scope == 'admin') && !addMarkerEnabled" ion-button (click)="enableAddMarker()"><ion-icon name="add"></ion-icon>Enable Add Location</button>
+      <button *ngIf="(scope == 'admin') && addMarkerEnabled" ion-button (click)="disableAddMarker()"><ion-icon name="remove"></ion-icon>Disable Add Location</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div #map id="map"></div>
+</ion-content>
