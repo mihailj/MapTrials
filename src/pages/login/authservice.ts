@@ -67,7 +67,7 @@ export class AuthService {
         window.localStorage.clear();
     }
 
-    authenticate(user) {
+    authenticate(user): any {
         var creds = "grant_type=password&username=" + user.name + "&password=" + user.password + "&scope=" + user.user_type;
         var headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -90,13 +90,13 @@ export class AuthService {
                     console.log('user authenticate promise resolve false:');
 							//console.log(data);
 
-                    resolve(false);
+                    resolve(data.json());
 				        }
             }, err => {
 
 										console.log('user authenticate promise subscribe err:');
 										console.log(err);
-                    resolve(false);
+                    resolve(err);
 			      });
         });
     }

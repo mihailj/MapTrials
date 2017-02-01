@@ -23,7 +23,7 @@
         <ion-icon name="{{usersPage.icon}}"></ion-icon>
         {{usersPage.title}}
       </button>
-      <button menuClose ion-item (click)="exitApp()">
+      <button menuClose ion-item (click)="exitApp()" *ngIf="!platform.is('ios')">
         <ion-icon name="exit"></ion-icon>
         Exit
       </button>

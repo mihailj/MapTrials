@@ -29,7 +29,7 @@ export class Login {
 			console.log('user authenticate ionic data:');
 			console.log(data);
 
-      if (data) {
+      if (data.ok) {
 
         this.events.publish('user:login');
 
@@ -37,9 +37,31 @@ export class Login {
       } else {
 				console.log('user authservice authenticate data = false');
 
+        let msg = 'Connection error, please try again later.';
+
+        if (data._body) {
+
+          console.log('data._body:');
+          console.log(data._body);
+
+          if (data._body.type && data._body.type == 'error') {
+            msg = 'Connection error, please try again later.';
+          } else {
+            // decode JSON
+            let dcd = JSON.parse(data._body);
+
+            console.log('JSON.parse(data._body):');
+            console.log(JSON.parse(data._body));
+
+            if (dcd.message) {
+              msg = 'Login incorrect, please try again!';
+            }
+          }
+        }
+
 				var alert = this.alertCtrl.create({
 					title: 'Login Error',
-					message: 'Login incorrect, please try again!',
+					message: msg, //'Login incorrect, please try again!',
 					buttons: ['ok']
 				});
 
