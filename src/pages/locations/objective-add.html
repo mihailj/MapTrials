@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      New Objective Info
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismissAddObjective()">
+		      <ion-icon name="close-circle"></ion-icon>&nbsp;<span color="primary">Close Objective</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+
+      <ion-item>
+  		  <ion-label floating>Title</ion-label>
+        <ion-input type="text" [(ngModel)]="title" value=""></ion-input>
+      </ion-item>
+
+    <ion-item>
+		  <ion-label floating>Score</ion-label>
+      <ion-input type="text" [(ngModel)]="score" value=""></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+    <ion-list radio-group [(ngModel)]="multiple">
+
+  	  <ion-list-header>
+  		  Multiple completions
+  	  </ion-list-header>
+
+  	  <ion-item>
+    		<ion-label>Yes</ion-label>
+    		<ion-radio value="y"></ion-radio>
+  	  </ion-item>
+
+  	  <ion-item>
+    		<ion-label>No</ion-label>
+    		<ion-radio value="n"></ion-radio>
+  	  </ion-item>
+
+  	</ion-list>
+
+		<p>
+			<button ion-button (click)="saveObjective()">
+				Save objective
+			</button>
+		</p>
+
+</ion-content>

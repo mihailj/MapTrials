@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Objective Completion
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+		      <ion-icon name="close-circle"></ion-icon>&nbsp;<span color="primary">Close Objective</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <h2>
+        <ion-icon name="flame"></ion-icon>
+        {{objective.title}}
+      </h2>
+
+      <p>Added by: <strong>{{objective.mt_user.username}}</strong><br>on <strong>{{ objective.date_added | date: 'dd/MM/yyyy HH:mm:ss' }}</strong></p>
+
+      <ion-note item-right>
+         Score: <strong>{{objective.score}}</strong>
+      </ion-note>
+    </ion-item>
+
+      <ion-item-sliding *ngFor="let item of objective['mt_completions']">
+        <ion-item>
+			    <h3>User: <strong>{{item.mt_user.username}}</strong></h3>
+
+          <p>Geolocation: <strong>{{item.latitude | number : '1.2-2'}}</strong>, <strong>{{item.longitude | number : '1.2-2'}}</strong></p>
+
+          <p>Distance: <strong>{{item.distance | number : '1.2-2'}}</strong> KM</p>
+
+          <p><img *ngIf="item.objective_photo" src="{{item.objective_photo}}" style="width: 100%; height: 100%;"></p>
+
+          <p>Comment:<br><strong>{{item.user_comment}}</strong></p>
+
+          <ion-note item-right>
+             Date:<br><strong>{{item.date_completed | date: 'dd/MM/yyyy'}}</strong><br><strong>{{item.date_completed | date: 'HH:mm:ss'}}</strong>
+          </ion-note>
+        </ion-item>
+
+        <ion-item-options>
+          <!--<button ion-button (click)="approveCompletion(item)" color="secondary">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              Approve
+          </button>-->
+          <button ion-button (click)="deleteCompletion(item)" color="danger">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+  </ion-list>
+</ion-content>

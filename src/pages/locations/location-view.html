@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Location Info
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <!--<span color="primary">Cancel</span>
+        <ion-icon name="md-close"></ion-icon>-->
+		  <ion-icon name="close-circle"></ion-icon>&nbsp;<span color="primary">Close Location</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <h2>
+        <ion-icon name="list"></ion-icon>
+        {{location.name}}
+      </h2>
+
+      <p>Added by: <strong>{{location.mt_user.username}}</strong><br>on <strong>{{ location.date_added | date: 'dd/MM/yyyy HH:mm:ss' }}</strong></p>
+
+      <button ion-button (click)="deleteLocation(location.id)" color="danger" item-right *ngIf="scope == 'admin'">
+          <ion-icon name="trash"></ion-icon>&nbsp;Delete
+      </button>
+    </ion-item>
+
+    <ion-item *ngIf="scope == 'admin'">
+      <button ion-button (click)="addObjectiveModal({location: location})">
+	        Add objective
+      </button>
+    </ion-item>
+
+    <template [ngIf]="scope == 'admin'">
+      <ion-item-sliding *ngFor="let item of location['mt_objectives']" #slidingItem>
+        <ion-item>
+          <ion-avatar item-left>
+            <img *ngIf="item.objective_photo" src="{{item.objective_photo}}">
+          </ion-avatar>
+
+    		  <button ion-button (click)="openObjectiveModal({obj: item}, slidingItem)" [disabled]="(item.completed == 'y') || ((item.multiple == 'n') && (item.mt_completions.length > 0))">
+    			   {{item.title}}
+    		  </button>
+
+          <p>Added by: <strong>{{item.mt_user.username}}</strong><br>
+          on <strong>{{ item.date_added | date: 'dd/MM/yyyy HH:mm:ss' }}</strong></p>
+
+          <ion-note item-right>
+             Score: <strong>{{item.score}}</strong>
+          </ion-note>
+        </ion-item>
+
+        <ion-item-options>
+          <button ion-button (click)="viewObjectiveModal({obj: item}, slidingItem)" color="light" [disabled]="scope != 'admin'">
+              <ion-icon name="image"></ion-icon>
+              View details
+          </button>
+          <!--<button ion-button (click)="editObjective(item)" color="light" [disabled]="scope != 'admin'">
+              <ion-icon name="paper"></ion-icon>
+              Edit
+          </button>-->
+          <button ion-button (click)="deleteObjective(item, slidingItem)" color="danger" [disabled]="scope != 'admin'">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </template>
+
+    <template [ngIf]="scope != 'admin'">
+      <ion-item *ngFor="let item of location['mt_objectives']">
+        <ion-avatar item-left>
+          <img *ngIf="item.objective_photo" src="{{item.objective_photo}}">
+        </ion-avatar>
+
+        <button ion-button (click)="openObjectiveModal({obj: item})" [disabled]="(item.completed == 'y') || ((item.multiple == 'n') && (item.mt_completions.length > 0))">
+           {{item.title}}
+        </button>
+
+        <p>Added by: <strong>{{item.mt_user.username}}</strong><br>on <strong>{{ item.date_added | date: 'dd/MM/yyyy HH:mm:ss' }}</strong></p>
+
+        <ion-note item-right>
+           Score: <strong>{{item.score}}</strong>
+        </ion-note>
+      </ion-item>
+    </template>
+
+  </ion-list>
+</ion-content>

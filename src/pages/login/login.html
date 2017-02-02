@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Login</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h3>Login</h3>
+
+	<ion-list radio-group [(ngModel)]="usercreds.user_type">
+
+	  <ion-list-header>
+		User type
+	  </ion-list-header>
+
+	  <ion-item>
+  		<ion-label>Regular</ion-label>
+  		<ion-radio value="user"></ion-radio>
+	  </ion-item>
+
+	  <ion-item>
+  		<ion-label>Administrator</ion-label>
+  		<ion-radio value="admin"></ion-radio>
+	  </ion-item>
+
+	</ion-list>
+
+  <ion-list>
+
+	  <ion-item>
+  		<ion-label floating>Username</ion-label>
+  		<ion-input [(ngModel)]="usercreds.name" type="text" value=""></ion-input>
+	  </ion-item>
+
+	  <ion-item>
+		  <ion-label floating>Password</ion-label>
+		  <ion-input [(ngModel)]="usercreds.password"  type="password" value=""></ion-input>
+	  </ion-item>
+
+	</ion-list>
+
+	<div padding>
+	  <button ion-button (click)="login(usercreds)">Sign In</button>
+	</div>
+</ion-content>
