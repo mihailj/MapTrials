@@ -13,12 +13,23 @@
       Map
     </ion-title>
     <ion-buttons end>
-      <button *ngIf="(scope == 'admin') && !addMarkerEnabled" ion-button (click)="enableAddMarker()"><ion-icon name="add"></ion-icon>Enable Add Location</button>
-      <button *ngIf="(scope == 'admin') && addMarkerEnabled" ion-button (click)="disableAddMarker()"><ion-icon name="remove"></ion-icon>Disable Add Location</button>
+      <button *ngIf="(scope == 'admin') && !addMarkerEnabled" ion-button (click)="enableAddMarker()"><ion-icon name="add-circle"></ion-icon><span color="primary">&nbsp;Enable Add Location</span></button>
+      <button *ngIf="(scope == 'admin') && addMarkerEnabled" ion-button (click)="disableAddMarker()"><ion-icon name="remove-circle"></ion-icon><span color="primary">&nbsp;Cancel Add Location</span></button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div #map id="map"></div>
+  <ion-fab right middle color="light">
+    <button ion-fab color="dark"><ion-icon name="help-circle"></ion-icon></button>
+    <ion-fab-list side="left">
+      <div class="legend">
+        <strong><u>Map Legend</u></strong><br><br>
+        <img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"> No objectives at location<br>
+        <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png"> Objectives not completed<br>
+        <img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png"> All objectives completed
+      </div>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>

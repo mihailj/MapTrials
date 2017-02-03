@@ -8,6 +8,7 @@ import { Users } from '../../providers/users';
 import { User } from '../../models/user';
 
 import { ModalAddUserPage } from './user-add';
+import { ModalViewUserPage } from './user-view';
 /*
   Generated class for the Users page.
 
@@ -122,6 +123,11 @@ export class UsersPage {
     });
 
     alert.present();
+  }
+
+  openUserModal(obj) {
+    let modal = this.modalCtrl.create(ModalViewUserPage, obj);
+    modal.present();
   }
 
 

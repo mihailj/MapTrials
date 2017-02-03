@@ -6,6 +6,7 @@ import { Login } from '../pages/login/login';
 
 import { UsersPage } from '../pages/users/users';
 import { ModalAddUserPage } from '../pages/users/user-add';
+import { ModalViewUserPage } from '../pages/users/user-view';
 
 import { LocationsPage } from '../pages/locations/locations';
 import { ModalContentPage } from '../pages/locations/location-view';
@@ -32,7 +33,8 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     ModalAddObjPage,
     ModalObjDetailsPage,
     UsersPage,
-    ModalAddUserPage
+    ModalAddUserPage,
+    ModalViewUserPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -49,7 +51,8 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     ModalAddObjPage,
     ModalObjDetailsPage,
     UsersPage,
-    ModalAddUserPage
+    ModalAddUserPage,
+    ModalViewUserPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, AuthService, Locations, Objectives, Users]
 })

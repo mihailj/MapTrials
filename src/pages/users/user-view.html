@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      User Info
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+		      <ion-icon name="close-circle"></ion-icon>&nbsp;<span color="primary">Close User</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <h2>
+        <ion-icon name="person"></ion-icon>
+        {{user.username}}
+      </h2>
+
+      <ion-note item-right>
+         Score: <strong>{{user.score}}</strong>
+      </ion-note>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>
+      Completed objectives ({{user.objectives_completed}})
+    </ion-list-header>
+    <ion-item-sliding *ngFor="let item of user.mt_completions">
+      <ion-item>
+		    <h3><strong>{{item.mt_objective.title}}</strong> in <strong>{{item.mt_objective.mt_location.name}}</strong></h3>
+
+        <p>Geolocation: <strong>{{item.latitude | number : '1.2-2'}}</strong>, <strong>{{item.longitude | number : '1.2-2'}}</strong></p>
+
+        <p>Distance: <strong>{{item.distance | number : '1.2-2'}}</strong> KM</p>
+
+        <p><img *ngIf="item.objective_photo" src="{{item.objective_photo}}" style="width: 100%; height: 100%;"></p>
+
+        <p>Comment:<br><strong>{{item.user_comment}}</strong></p>
+
+        <ion-note item-right>
+           Date:<br><strong>{{item.date_completed | date: 'dd/MM/yyyy'}}</strong><br><strong>{{item.date_completed | date: 'HH:mm:ss'}}</strong>
+        </ion-note>
+      </ion-item>
+
+      <ion-item-options>
+        <!--<button ion-button (click)="approveCompletion(item)" color="secondary">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            Approve
+        </button>-->
+        <button ion-button (click)="deleteCompletion(item)" color="danger">
+            <ion-icon name="trash"></ion-icon>
+            Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

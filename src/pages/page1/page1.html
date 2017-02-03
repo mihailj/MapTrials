@@ -9,7 +9,7 @@
 
 <ion-content padding>
 
-	<h2>You are logged in as '{{UserInfo.username}}'</h2>
+	<h3 padding>You are logged in as '{{UserInfo.username}}'</h3>
 
   <ion-list>
     <ion-item>
@@ -24,19 +24,9 @@
          {{UserInfo.score}}
       </ion-note>
     </ion-item>
+    <ion-item>
+      <button ion-button (click)="logout()">Logout</button>
+    </ion-item>
   </ion-list>
 
-  <button ion-button (click)="logout()">Logout</button>
-<!--    <button ion-button (click)="getinfo()">Getinfo</button>-->
-
-
-
-<!--  <h3>Ionic Menu Starter</h3>
-
-
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
-
-  <button ion-button secondary menuToggle>Toggle Menu</button>-->
 </ion-content>

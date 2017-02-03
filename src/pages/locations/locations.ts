@@ -164,13 +164,13 @@ export class LocationsPage {
     console.log(location);
     let latLng = new google.maps.LatLng(location.latitude, location.longitude);
 
-    let markerIcon = null;
+    let markerIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+
+    let objectivesCompleted = 0;
 
     if (location.mt_objectives.length == 0) {
       markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
     } else {
-      var objectivesCompleted = 0;
-
       for (var i in location.mt_objectives) {
         if (location.mt_objectives[i].completed == 'y') {
           objectivesCompleted++;
@@ -186,7 +186,8 @@ export class LocationsPage {
   		map: this.map,
   		animation: google.maps.Animation.DROP,
   		position: latLng,
-      icon: markerIcon
+      icon: markerIcon,
+      /*label: String(location.mt_objectives.length - objectivesCompleted)*/
 	  });
 
 	  marker.addListener('click', () => {

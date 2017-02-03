@@ -14,3 +14,16 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+div.legend {
+  background: color($colors, fab, base);
+  color: color($colors, fab, contrast);
+  padding: 5px;
+  border: 1px solid #222;
+  white-space: nowrap;
+  width: 220px;
+}
+
+div.legend img {
+  vertical-align: middle;
+}

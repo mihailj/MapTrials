@@ -5,7 +5,7 @@
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismissAddUser()">
-		  <ion-icon name="arrow-back"></ion-icon>&nbsp;<span color="primary">Close Add User</span>
+		  <ion-icon name="close-circle"></ion-icon><span color="primary">&nbsp;Close Add User</span>
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -13,10 +13,10 @@
 <ion-content>
   <ion-list>
 
-      <ion-item>
-  		  <ion-label floating>Username</ion-label>
-        <ion-input type="text" [(ngModel)]="user_props.username" value=""></ion-input>
-      </ion-item>
+    <ion-item>
+		  <ion-label floating>Username</ion-label>
+      <ion-input type="text" [(ngModel)]="user_props.username" value=""></ion-input>
+    </ion-item>
 
     <ion-item>
 		  <ion-label floating>Password</ion-label>
@@ -25,28 +25,28 @@
 
   </ion-list>
 
-    <ion-list radio-group [(ngModel)]="user_props.type">
+  <ion-list radio-group [(ngModel)]="user_props.type">
 
-  	  <ion-list-header>
-  		  User type
-  	  </ion-list-header>
+	  <ion-list-header>
+		  User type
+	  </ion-list-header>
 
-  	  <ion-item>
-  		  <ion-label>Regular</ion-label>
-  		  <ion-radio value="normal"></ion-radio>
-  	  </ion-item>
+	  <ion-item>
+		  <ion-label>Regular</ion-label>
+		  <ion-radio value="normal"></ion-radio>
+	  </ion-item>
 
-  	  <ion-item>
-  		  <ion-label>Administrator</ion-label>
-  		    <ion-radio value="admin"></ion-radio>
-  	  </ion-item>
+	  <ion-item>
+		  <ion-label>Administrator</ion-label>
+		    <ion-radio value="admin"></ion-radio>
+	  </ion-item>
 
-  	</ion-list>
+	</ion-list>
 
-		<div padding>
-			<button ion-button (click)="saveUser()">
-				Save user
-			</button>
-		</div>
+	<div padding>
+		<button ion-button (click)="saveUser()">
+			Save user
+		</button>
+	</div>
 
 </ion-content>
