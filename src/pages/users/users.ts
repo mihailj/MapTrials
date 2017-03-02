@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { AlertController, ModalController, NavController, NavParams, ToastController } from 'ionic-angular';
+import { AlertController, ModalController, NavController, NavParams, ToastController, Events } from 'ionic-angular';
 
 import { AuthService } from '../login/authservice';
 
@@ -30,13 +30,16 @@ export class UsersPage {
             	public modalCtrl: ModalController,
               public alertCtrl: AlertController,
               public zone: NgZone,
-              public toastCtrl: ToastController
+              public toastCtrl: ToastController,
+              public events: Events
             ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UsersPage');
 
     this.loadUsers();
+    this.listenToDeletedCompletionEventUsers();
+
   }
 
   ionViewCanEnter(): boolean {
@@ -50,16 +53,26 @@ export class UsersPage {
   }
 
   loadUsers() {
+  		this.usersProvider.list().subscribe(users => {
 
-    		this.usersProvider.list().subscribe(users => {
+  			this.users = users;
 
-    			this.users = users;
+        console.log(users);
 
-          console.log(users);
-
-    		});
+  		});
   }
 
+  listenToDeletedCompletionEventUsers() {
+    this.events.subscribe('completion:deleted', (objective_id) => {
+
+      //console.log('EVENT completion:deleted RECEIVED IN users, objective id: ' + objective_id);
+
+      this.zone.run(() => {
+        this.loadUsers();
+      });
+
+    });
+  }
 
   addUserModal() {
     let modal = this.modalCtrl.create(ModalAddUserPage);

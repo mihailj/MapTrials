@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { AuthService } from './authservice';
 
-import { NavController, AlertController, Events } from 'ionic-angular';
+import { NavController, AlertController, Events, LoadingController } from 'ionic-angular';
 
 import { Page1 } from '../page1/page1';
 
@@ -17,15 +17,20 @@ export class Login {
 	   user_type: 'user'
 	};
 
+  loading: any;
+
 	constructor(public navCtrl: NavController,
               public authservice: AuthService,
               public alertCtrl: AlertController,
+              public loadingCtrl: LoadingController,
               private events: Events) {
   }
 
   login(user) {
-		this.authservice.authenticate(user).then(data => {
+    this.presentLoading();
 
+		this.authservice.authenticate(user).then(data => {
+      this.loading.dismiss().catch(() => {});
 			console.log('user authenticate ionic data:');
 			console.log(data);
 
@@ -68,9 +73,25 @@ export class Login {
 				alert.present();
 			}
 		}).catch(error => {
+      this.loading.dismiss().catch(() => {});
+
 			console.log('user authservice authenticate catch error');
 			console.log(error)
 		});
 
+  }
+
+  presentLoading() {
+    this.loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+
+    this.loading.present();
+
+    setTimeout(() => {
+      if (this.loading) {
+        this.loading.dismiss();
+      }
+    }, 10000);
   }
 }

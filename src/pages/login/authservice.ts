@@ -3,6 +3,7 @@ import { Http, Headers } from '@angular/http';
 import { MenuController } from 'ionic-angular';
 
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/timeout';
 
 import { User } from '../../models/user';
 
@@ -37,9 +38,7 @@ export class AuthService {
 
     storeUserCredentials(token, scope, user_id) {
         window.localStorage.setItem('user_credentials', token);
-        //this.useCredentials(token);
         window.localStorage.setItem('user_scope', scope);
-
         window.localStorage.setItem('user_id', user_id);
 
         this.useCredentials(token, scope, user_id);
@@ -79,7 +78,7 @@ export class AuthService {
     		}
 
         return new Promise(resolve => {
-            this.http.post(this.config.WS_ENDPOINT + 'oauth/token', creds, {headers: headers}).subscribe(data => {
+            this.http.post(this.config.WS_ENDPOINT + 'oauth/token', creds, {headers: headers}).timeout(10000).subscribe(data => {
 				        console.log(data);
                 if (data.json().access_token){
                     this.storeUserCredentials(data.json().access_token, data.json().scope, data.json().user.id);

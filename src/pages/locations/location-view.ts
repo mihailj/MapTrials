@@ -211,16 +211,16 @@ export class ModalContentPage {
 
     this.events.subscribe('completion:deleted', (objective_id) => {
 
-      console.log('EVENT completion:deleted RECEIVED IN location-view, objective id: ' + objective_id);
+      //console.log('EVENT completion:deleted RECEIVED IN location-view, objective id: ' + objective_id);
 
-        for (var i in this.location['mt_objectives']) {
-          if (this.location['mt_objectives'][i].id == objective_id) {
-            this.location['mt_objectives'][i].completed = 'n';
-            this.location['mt_objectives'][i].objective_photo = './assets/images/no_image.png';
-            this.location['mt_objectives'][i].mt_completions = [];
-          }
+      for (var i in this.location['mt_objectives']) {
+        if (this.location['mt_objectives'][i].id == objective_id) {
+          this.location['mt_objectives'][i].completed = 'n';
+          this.location['mt_objectives'][i].objective_photo = './assets/images/no_image.png';
+          this.location['mt_objectives'][i].mt_completions = [];
         }
-      });
+      }
+    });
     //});
   }
 

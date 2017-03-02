@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      View Message
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismissViewMessage()">
+		  <ion-icon name="close-circle"></ion-icon><span color="primary">&nbsp;Close Message</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+
+    <ion-list-header>
+      <ion-icon name="mail-open"></ion-icon>&nbsp;Message Details
+    </ion-list-header>
+
+    <ion-item>
+		  <h3>From:</h3>
+      <ion-note item-right>{{message.user_sender.username}}</ion-note>
+    </ion-item>
+
+    <ion-item>
+		  <h3>To:</h3>
+      <ion-note item-right>{{(message.type == 'all')?message.type:message.user_recipient.username}}</ion-note>
+    </ion-item>
+
+    <ion-item>
+		  <h3>Date:</h3>
+      <ion-note item-right>{{message.sent_date | date: 'dd/MM/yyyy HH:mm:ss'}}</ion-note>
+    </ion-item>
+
+    <ion-item>
+		  <h3>Body:</h3>
+      <p>{{message.body}}</p>
+    </ion-item>
+
+    <ion-list-header *ngIf="isReply">
+      <ion-icon name="share-alt"></ion-icon>&nbsp;Reply
+    </ion-list-header>
+
+    <ion-item *ngIf="isReply">
+		  <ion-label floating>Subject</ion-label>
+      <ion-input type="text" [(ngModel)]="reply.subject"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="isReply">
+		  <ion-label floating>Body</ion-label>
+      <ion-textarea [(ngModel)]="reply.body"></ion-textarea>
+    </ion-item>
+
+  </ion-list>
+
+	<div padding *ngIf="isReply">
+		<button ion-button (click)="replyMessage()">
+			Reply message
+		</button>
+	</div>
+
+</ion-content>

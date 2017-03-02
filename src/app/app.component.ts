@@ -6,6 +6,7 @@ import { Page1 } from '../pages/page1/page1';
 import { Login } from '../pages/login/login';
 import { UsersPage } from '../pages/users/users';
 import { LocationsPage } from '../pages/locations/locations';
+import { MessagesPage } from '../pages/messages/messages';
 
 import { AuthService } from '../pages/login/authservice';
 
@@ -39,7 +40,8 @@ export class MyApp {
     this.pages = [
 /*      { title: 'Login', component: Login, icon: 'log-in' },*/
       { title: 'Profile', component: Page1, icon: 'person' },
-	    { title: 'Map', component: LocationsPage, icon: 'globe' }
+	    { title: 'Map', component: LocationsPage, icon: 'globe' },
+      { title: 'Messages', component: MessagesPage, icon: 'mail' }
     ];
 
     this.usersPage = {title: 'Users', component: UsersPage, icon: 'people'}
@@ -50,7 +52,10 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
-      Splashscreen.hide();
+      Splashscreen.show();
+      setTimeout(() => {
+        Splashscreen.hide();
+      }, 2500);
     });
   }
 

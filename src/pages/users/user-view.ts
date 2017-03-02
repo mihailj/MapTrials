@@ -3,7 +3,7 @@ import { NavParams, ViewController, ToastController, AlertController, Events } f
 
 import { User } from '../../models/user';
 
-//import { Objectives } from '../../providers/objectives';
+import { Objectives } from '../../providers/objectives';
 
 // Import the config module
 import { EnvConfigurationProvider } from "gl-ionic2-env-configuration";
@@ -26,7 +26,8 @@ export class ModalViewUserPage {
               public toastCtrl: ToastController,
               public alertCtrl: AlertController,
               public zone: NgZone,
-              public events: Events) {
+              public events: Events,
+              public objectivesProvider: Objectives) {
 
     this.config = envConfiguration.getConfig();
     this.user = this.params.get('obj');
@@ -85,9 +86,11 @@ export class ModalViewUserPage {
           text: 'Delete',
           handler: () => {
 
-/*            this.zone.run(() => {
-              for (let i = 0; i < this.objective.mt_completions.length; i++) {
-                if (this.objective.mt_completions[i] == obj){
+            this.zone.run(() => {
+              for (let i = 0; i < this.user.mt_completions.length; i++) {
+                if (this.user.mt_completions[i] == obj){
+
+                  let score = this.user.mt_completions[i].score;
 
                   this.objectivesProvider.deleteCompletion(obj.id).subscribe(completion => {
 
@@ -95,11 +98,13 @@ export class ModalViewUserPage {
 
                       this.events.publish("completion:deleted", obj.objective_id);
 
-                      console.log('EVENT completion:deleted PUBLISHED IN objective-details, objective id: ' + obj.objective_id);
+                      console.log('EVENT completion:deleted PUBLISHED IN user-view, objective id: ' + obj.objective_id);
 
                       this.events.publish("map:reload");
 
-                      this.objective.mt_completions.splice(i, 1);
+                      this.user.mt_completions.splice(i, 1);
+                      this.user.objectives_completed--;
+                      this.user.score = this.user.score - score;
 
                       this.presentToast('Objective completion deleted!');
 
@@ -107,7 +112,7 @@ export class ModalViewUserPage {
 
                 }
               }
-            });*/
+            });
 
 
           }

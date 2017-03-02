@@ -32,6 +32,8 @@ export class Page1 {
 	}
 
   ionViewCanEnter(): boolean{
+    console.log('ionViewCanEnter profile authservice:');
+    console.log(this.authservice);
      // here we can either return true or false
      // depending on if we want to leave this view
      if (!this.authservice.isLoggedin || !this.authservice.AuthToken) {

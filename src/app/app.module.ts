@@ -4,6 +4,10 @@ import { MyApp } from './app.component';
 import { Page1 } from '../pages/page1/page1';
 import { Login } from '../pages/login/login';
 
+import { MessagesPage } from '../pages/messages/messages';
+import { ModalNewMessagePage } from '../pages/messages/message-new';
+import { ModalViewMessagePage } from '../pages/messages/message-view';
+
 import { UsersPage } from '../pages/users/users';
 import { ModalAddUserPage } from '../pages/users/user-add';
 import { ModalViewUserPage } from '../pages/users/user-view';
@@ -18,6 +22,11 @@ import { AuthService } from '../pages/login/authservice';
 import { Locations } from '../providers/locations';
 import { Objectives } from '../providers/objectives';
 import { Users } from '../providers/users';
+import { Messages } from '../providers/messages';
+
+import { LocationTracker } from '../providers/location-tracker';
+
+import { TruncatePipe } from '../pipes/truncate';
 
 // Import the config module
 import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
@@ -28,13 +37,17 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     Page1,
   	Login,
   	LocationsPage,
+    MessagesPage,
+    ModalNewMessagePage,
+    ModalViewMessagePage,
   	ModalContentPage,
   	ModalObjPage,
     ModalAddObjPage,
     ModalObjDetailsPage,
     UsersPage,
     ModalAddUserPage,
-    ModalViewUserPage
+    ModalViewUserPage,
+    TruncatePipe
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -46,6 +59,9 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     Page1,
   	Login,
   	LocationsPage,
+    MessagesPage,
+    ModalNewMessagePage,
+    ModalViewMessagePage,
   	ModalContentPage,
   	ModalObjPage,
     ModalAddObjPage,
@@ -54,6 +70,14 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     ModalAddUserPage,
     ModalViewUserPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, AuthService, Locations, Objectives, Users]
+  providers: [
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    AuthService,
+    LocationTracker,
+    Locations,
+    Objectives,
+    Users,
+    Messages
+  ]
 })
 export class AppModule {}

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      New Message
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismissNewMessage()">
+		  <ion-icon name="close-circle"></ion-icon><span color="primary">&nbsp;Close New Message</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+
+    <ion-item>
+		  <ion-label floating>To</ion-label>
+      <ion-select [(ngModel)]="message.to" multiple="true" (ionChange)="onChange(message.to)">
+        <ion-option value="0">ALL</ion-option>
+
+        <ion-option *ngFor="let item of users" value="{{item.id}}">{{item.username}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+		  <ion-label floating>Subject</ion-label>
+      <ion-input type="text" [(ngModel)]="message.subject" value=""></ion-input>
+    </ion-item>
+
+    <ion-item>
+		  <ion-label floating>Body</ion-label>
+      <ion-textarea [(ngModel)]="message.body"></ion-textarea>
+    </ion-item>
+
+  </ion-list>
+
+	<div padding>
+		<button ion-button (click)="sendMessage()">
+			Send message
+		</button>
+	</div>
+
+</ion-content>

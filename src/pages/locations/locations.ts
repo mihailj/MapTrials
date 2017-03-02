@@ -1,5 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, NavParams, ModalController, AlertController, ToastController, Events  } from 'ionic-angular';
+import { Geolocation, Geoposition } from 'ionic-native';
+
+import { LocationTracker } from '../../providers/location-tracker';
 
 import { AuthService } from '../login/authservice';
 
@@ -10,6 +13,8 @@ import { Location } from '../../models/location';
 import { Locations } from '../../providers/locations';
 
 import { ModalContentPage }  from './location-view';
+
+import 'rxjs/add/operator/filter';
 
 declare var google;
 
@@ -47,10 +52,15 @@ export class LocationsPage {
 
   config: ITestAppEnvConfiguration;
 
+  myMarker: any;
+
+  public watch: any;
+
   constructor(public navCtrl: NavController,
               public authservice: AuthService,
               public navParams: NavParams,
               public locationsProvider: Locations,
+              public locationTracker: LocationTracker,
               public modalCtrl: ModalController,
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
@@ -68,6 +78,8 @@ export class LocationsPage {
   }
 
   ionViewCanEnter(): boolean{
+    console.log('ionViewCanEnter locations authservice:');
+    console.log(this.authservice);
      // here we can either return true or false
      // depending on if we want to leave this view
      if (!this.authservice.isLoggedin || !this.authservice.AuthToken) {
@@ -81,6 +93,15 @@ export class LocationsPage {
     console.log('ionViewDidLoad LocationsPage');
     this.loadMap();
 
+  }
+
+  ionViewDidEnter() {
+    this.locationTracker.startTracking();
+  }
+
+  ionViewWillLeave() {
+    this.watch.unsubscribe();
+    this.locationTracker.stopTracking();
   }
 
   openLocationModal(characterNum) {
@@ -98,6 +119,7 @@ export class LocationsPage {
 
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
+    //this.geolocateMe();
 
 		this.locationsProvider.list().subscribe(locations => {
 
@@ -129,6 +151,70 @@ export class LocationsPage {
 				bounds.extend(myLatLng);
 				this.map.fitBounds(bounds);
 			}
+
+      //this.geolocateMe();
+
+      //console.log('geolocateMe position:');
+      //console.log(this.locationTracker.lat + ', ' + this.locationTracker.lng);
+
+      //var bounds = new google.maps.LatLngBounds();
+
+      //this.zone.run(() => {
+    		/*Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000, maximumAge: 0 })
+                    .filter((p) => p.coords !== undefined) //Filter Out Errors
+                    .subscribe((position) => {
+
+          console.log('my geolocation position:');
+    			console.log(position.coords.latitude + ', ' + position.coords.longitude);
+
+          //this.latitude = position.coords.latitude;
+          //this.longitude = position.coords.longitude;
+
+    			//this.coordinates = position.coords.latitude.toFixed(2) + ', ' + position.coords.longitude.toFixed(2);
+    			//this.storeUserGeolocation(position);*/
+          let options = {
+            frequency: 3000,
+            enableHighAccuracy: true
+          };
+
+          this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+
+            console.log('location tracker position:')
+            console.log(position.coords.latitude + ', ' + position.coords.longitude);
+
+            // Run update inside of Angular's zone
+            /*this.zone.run(() => {
+              this.lat = position.coords.latitude;
+              this.lng = position.coords.longitude;
+            });*/
+
+            let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            if (this.myMarker) {
+              this.myMarker.setPosition(latLng);
+            } else {
+              let markerIcon = 'http://maps.google.com/mapfiles/ms/micons/horsebackriding.png';
+
+          	  this.myMarker = new google.maps.Marker({
+            		map: this.map,
+            		animation: google.maps.Animation.DROP,
+            		position: latLng,
+                icon: markerIcon,
+          	  });
+
+              bounds.extend(latLng);
+      				this.map.fitBounds(bounds);
+            }
+
+
+          });
+
+
+    		/*}).catch((error) => {
+          console.log('Error getting location', error);*/ /*
+        });*/
+
+
 		});
   }
 
@@ -277,4 +363,5 @@ export class LocationsPage {
       this.loadMap();
     });
   }
+
 }
