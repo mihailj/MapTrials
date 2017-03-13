@@ -96,7 +96,7 @@ export class LocationsPage {
   }
 
   ionViewDidEnter() {
-    this.locationTracker.startTracking();
+    //this.locationTracker.startTracking();
   }
 
   ionViewWillLeave() {
@@ -109,7 +109,9 @@ export class LocationsPage {
     modal.present();
   }
 
-  loadMap() {
+  loadMap(reloadMyLocation: boolean = false) {
+    this.locationTracker.startTracking();
+
 	  var bounds = new google.maps.LatLngBounds();
 
     let mapOptions = {
@@ -190,7 +192,7 @@ export class LocationsPage {
 
             let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-            if (this.myMarker) {
+            if (this.myMarker && !reloadMyLocation) {
               this.myMarker.setPosition(latLng);
             } else {
               let markerIcon = 'http://maps.google.com/mapfiles/ms/micons/horsebackriding.png';
@@ -360,7 +362,7 @@ export class LocationsPage {
 
   listenToMapReloadEvent() {
     this.events.subscribe('map:reload', () => {
-      this.loadMap();
+      this.loadMap(true);
     });
   }
 

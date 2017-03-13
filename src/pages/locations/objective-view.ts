@@ -200,9 +200,9 @@ export class ModalObjPage {
               if (!this.config.DEBUG) {
                 this.uploadImage(objective_completion);
               }
-
-              this.dismissObjective();
-
+              else {
+                this.dismissObjective();
+              }
 
     			});
     });
@@ -251,7 +251,8 @@ export class ModalObjPage {
       this.events.publish('objective:completed', objective_completion);
 
       this.loading.dismissAll()
-
+      this.dismissObjective();
+      
       setTimeout(() => {
           this.presentToast('Image succesful uploaded.');
       }, 3500);
