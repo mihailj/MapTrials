@@ -56,6 +56,8 @@ export class LocationsPage {
 
   public watch: any;
 
+  reloadMyLoc: boolean = false;
+
   constructor(public navCtrl: NavController,
               public authservice: AuthService,
               public navParams: NavParams,
@@ -179,6 +181,10 @@ export class LocationsPage {
             enableHighAccuracy: true
           };
 
+          if (reloadMyLocation) {
+            this.reloadMyLoc = true;
+          }
+
           this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
 
             console.log('location tracker position:')
@@ -192,7 +198,7 @@ export class LocationsPage {
 
             let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-            if (this.myMarker && !reloadMyLocation) {
+            if (this.myMarker && !this.reloadMyLoc) {
               this.myMarker.setPosition(latLng);
             } else {
               let markerIcon = 'http://maps.google.com/mapfiles/ms/micons/horsebackriding.png';
@@ -206,6 +212,8 @@ export class LocationsPage {
 
               bounds.extend(latLng);
       				this.map.fitBounds(bounds);
+
+              this.reloadMyLoc = false;
             }
 
 
