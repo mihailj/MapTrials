@@ -5,7 +5,7 @@
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismissViewMessage()">
-		  <ion-icon name="close-circle"></ion-icon><span color="primary">&nbsp;Close Message</span>
+		  <ion-icon name="close-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Close Message</span>
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -30,6 +30,11 @@
     <ion-item>
 		  <h3>Date:</h3>
       <ion-note item-right>{{message.sent_date | date: 'dd/MM/yyyy HH:mm:ss'}}</ion-note>
+    </ion-item>
+
+    <ion-item>
+		  <h3>Subject:</h3>
+      <p>{{message.body}}</p>
     </ion-item>
 
     <ion-item>

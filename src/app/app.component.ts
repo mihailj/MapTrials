@@ -81,14 +81,11 @@ export class MyApp {
           console.log('push notification data:');
           console.log(data);
 
-          //console.log('message:');
-          //console.log(data.message);
-          //let self = this;
           //if user using app and push notification comes
           if (data.additionalData.foreground) {
             // if application open, show popup
             let confirmAlert = this.alertCtrl.create({
-              title: 'New Notification',
+              title: 'New Message',
               message: data.message,
               buttons: [{
                 text: 'Ignore',
@@ -96,17 +93,28 @@ export class MyApp {
               }, {
                 text: 'View',
                 handler: () => {
-                  //TODO: Your logic here
-                  //self.nav.push(DetailsPage, {message: data.message});
+
+                  if (this.loggedIn) {
+                    this.nav.setRoot(MessagesPage).catch(()=> console.log('should I stay or should I go now'));
+                  } else {
+                    this.nav.setRoot(Login).catch(()=> console.log('should I stay or should I go now'));
+                  }
+
                 }
               }]
             });
             confirmAlert.present();
           } else {
             //if user NOT using app and push notification comes
-            //TODO: Your logic on click of push notification directly
-            //self.nav.push(DetailsPage, {message: data.message});
+
             console.log("Push notification clicked");
+
+            if (this.loggedIn) {
+              this.nav.setRoot(MessagesPage).catch(()=> console.log('should I stay or should I go now'));
+            } else {
+              this.nav.setRoot(Login).catch(()=> console.log('should I stay or should I go now'));
+            }
+
           }
         });
         this.authservice.pushService.on('error', (e) => {

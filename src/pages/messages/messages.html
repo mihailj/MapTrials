@@ -11,7 +11,7 @@
     </button>
     <ion-title>Messages</ion-title>
     <ion-buttons end *ngIf="authservice.AuthScope == 'admin'">
-      <button ion-button (click)="newMessageModal()"><ion-icon name="add-circle"></ion-icon><span color="primary">&nbsp;New Message</span></button>
+      <button ion-button (click)="newMessageModal()"><ion-icon name="add-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;New Message</span></button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -46,12 +46,13 @@
   			   {{item.subject}}
   		  </button>
         <p>
-          {{item.body | truncate:[100] }}
-        </p>
-        <ion-note item-right>
           From: <strong>{{item.user_sender.username}}</strong><br>
           Date: <strong>{{item.sent_date | date: 'dd/MM/yyyy HH:mm:ss'}}</strong>
-        </ion-note>
+        </p>
+        <p>
+          {{item.body | truncate:[100] }}
+        </p>
+
       </ion-item>
 
       <ion-item-options>
@@ -82,12 +83,12 @@
   			   {{item.subject}}
   		  </button>
         <p>
-          {{item.body | truncate:[100] }}
-        </p>
-        <ion-note item-right>
           To: <strong>{{(item.type == 'all')?item.type:item.user_recipient.username}}</strong><br>
           Date: <strong>{{item.sent_date | date: 'dd/MM/yyyy HH:mm:ss'}}</strong>
-        </ion-note>
+        </p>
+        <p>
+          {{item.body | truncate:[100] }}
+        </p>
       </ion-item>
 
       <ion-item-options>
