@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform, AlertController, Events } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
+import { Push } from 'ionic-native';
 
 import { Page1 } from '../pages/page1/page1';
 import { Login } from '../pages/login/login';
@@ -51,6 +52,68 @@ export class MyApp {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      if (!this.platform.is('cordova')) {
+        this.authservice.deviceId = 'run_in_browser';
+      }
+      else {
+        // setup push notifications
+        this.authservice.pushService = Push.init({
+           android: {
+               senderID: '773099066790'
+           },
+           ios: {
+               alert: 'true',
+               badge: true,
+               sound: 'false'
+           },
+           windows: {}
+        });
+
+        this.authservice.pushService.on('registration', (data) => {
+          console.log("device token ->", data.registrationId);
+          //TODO - send device token to server
+
+          this.authservice.deviceId = data.registrationId;
+
+        });
+
+        this.authservice.pushService.on('notification', (data) => {
+          console.log('push notification data:');
+          console.log(data);
+
+          //console.log('message:');
+          //console.log(data.message);
+          //let self = this;
+          //if user using app and push notification comes
+          if (data.additionalData.foreground) {
+            // if application open, show popup
+            let confirmAlert = this.alertCtrl.create({
+              title: 'New Notification',
+              message: data.message,
+              buttons: [{
+                text: 'Ignore',
+                role: 'cancel'
+              }, {
+                text: 'View',
+                handler: () => {
+                  //TODO: Your logic here
+                  //self.nav.push(DetailsPage, {message: data.message});
+                }
+              }]
+            });
+            confirmAlert.present();
+          } else {
+            //if user NOT using app and push notification comes
+            //TODO: Your logic on click of push notification directly
+            //self.nav.push(DetailsPage, {message: data.message});
+            console.log("Push notification clicked");
+          }
+        });
+        this.authservice.pushService.on('error', (e) => {
+          console.log(e.message);
+        });
+      }
+
       StatusBar.styleDefault();
       Splashscreen.show();
       setTimeout(() => {

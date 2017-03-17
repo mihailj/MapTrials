@@ -118,7 +118,8 @@ export class LocationsPage {
 
     let mapOptions = {
       zoom: 10,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      fullscreenControl: false
     }
 
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
@@ -291,6 +292,10 @@ export class LocationsPage {
 
 			this.openLocationModal({loc: location});
 	  });
+  }
+
+  goToMyPosition() {
+    this.map.panTo(this.myMarker.position);
   }
 
   presentConfirm(position) {

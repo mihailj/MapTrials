@@ -21,6 +21,9 @@
 
 <ion-content>
   <div #map id="map"></div>
+  <ion-fab right top color="light">
+    <button ion-fab color="light" (click)="goToMyPosition()"><ion-icon name="locate"></ion-icon></button>
+  </ion-fab>
   <ion-fab right middle color="light">
     <button ion-fab color="dark"><ion-icon name="help-circle"></ion-icon></button>
     <ion-fab-list side="left">

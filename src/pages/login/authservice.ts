@@ -21,6 +21,8 @@ export class AuthService {
     AuthToken; AuthScope; UserId;
     UserInfo: User;
     config: ITestAppEnvConfiguration;
+    pushService: any;
+    deviceId: string;
 
     constructor(public http: Http,
                 private envConfiguration: EnvConfigurationProvider<ITestAppEnvConfiguration>,
@@ -114,6 +116,40 @@ export class AuthService {
             });
         });
     }*/
+
+    setdevice_id(data, device_id) {
+
+        //var headers = new Headers();
+      	//this.loadUserCredentials();
+      	//console.log(this.authservice.AuthToken);
+      	//headers.append('Authorization', 'Bearer ' + this.AuthToken);
+
+//console.log('setdevice_id:');
+//console.log(data);
+//console.log(device_id);
+
+        data.device_id = device_id;
+
+        var headers = new Headers();
+        this.loadUserCredentials();
+        headers.append('Authorization', 'Bearer ' + this.AuthToken);
+        headers.append('Content-Type', 'application/json');
+
+        return new Promise(resolve => {
+            this.http.post(this.config.WS_ENDPOINT + 'users/setdevice_id', data, {headers: headers}).subscribe(data => {
+
+              console.log(data);
+                if(data.json().success){
+                    resolve(true);
+                }
+                else
+                    resolve(false);
+            });
+        });
+
+      	//return this.http.setdevice_id(this.config.WS_ENDPOINT + 'users/setdevice_id', data, {headers: headers}).map(res => <User[]>res.json());
+
+    }
 
     getinfo() {
 	    var headers = new Headers();

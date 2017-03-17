@@ -38,6 +38,10 @@ export class Login {
 
         this.events.publish('user:login');
 
+        // save device id to logged in user
+	       this.authservice.setdevice_id(data.user, this.authservice.deviceId).then(data => {
+
+         });
         this.navCtrl.setRoot(Page1);
       } else {
 				console.log('user authservice authenticate data = false');
