@@ -1,7 +1,7 @@
 {
-  "name": "ionic-hello-world",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "name": "maptrials",
+  "author": "Mihail Juganaru",
+  "homepage": "https://github.com/mihailj/MapTrials",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -40,5 +40,5 @@
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [],
-  "description": "MapTrials: An Ionic project"
+  "description": "MapTrials: Hybrid Mobile Application using Ionic 2 Framework"
 }

@@ -8,9 +8,16 @@ import { Login } from '../pages/login/login';
 import { UsersPage } from '../pages/users/users';
 import { LocationsPage } from '../pages/locations/locations';
 import { MessagesPage } from '../pages/messages/messages';
+import { SettingsPage } from '../pages/settings/settings';
 
 import { AuthService } from '../pages/login/authservice';
 
+
+interface defPage {
+  title: string,
+  component: any,
+  icon: string
+}
 
 @Component({
   templateUrl: 'app.html'
@@ -20,11 +27,12 @@ export class MyApp {
 
   rootPage: any = Login;
 
-  pages: Array<{title: string, component: any, icon: string}>;
+  pages: Array<defPage>;
 
-  loginPage: {title: string, component: any, icon: string};
-  logoutPage: {title: string, icon: string};
-  usersPage: {title: string, component: any, icon: string};
+  loginPage: defPage;
+  logoutPage: defPage;
+  usersPage: defPage;
+  settingsPage: defPage;
 
   loggedIn = false;
 
@@ -36,7 +44,7 @@ export class MyApp {
     this.listenToLoginEvents();
 
     this.loginPage = {title: 'Login', component: Login, icon: 'log-in'};
-    this.logoutPage = {title: 'Logout', icon: 'log-out'};
+    this.logoutPage = {title: 'Logout', component: null, icon: 'log-out'};
 
     this.pages = [
 /*      { title: 'Login', component: Login, icon: 'log-in' },*/
@@ -45,7 +53,8 @@ export class MyApp {
       { title: 'Messages', component: MessagesPage, icon: 'mail' }
     ];
 
-    this.usersPage = {title: 'Users', component: UsersPage, icon: 'people'}
+    this.usersPage = {title: 'Users', component: UsersPage, icon: 'people'};
+    this.settingsPage = {title: 'Settings', component: SettingsPage, icon: 'settings'};
   }
 
   initializeApp() {

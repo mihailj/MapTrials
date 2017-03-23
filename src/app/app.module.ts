@@ -12,6 +12,8 @@ import { UsersPage } from '../pages/users/users';
 import { ModalAddUserPage } from '../pages/users/user-add';
 import { ModalViewUserPage } from '../pages/users/user-view';
 
+import { SettingsPage } from '../pages/settings/settings';
+
 import { LocationsPage } from '../pages/locations/locations';
 import { ModalContentPage } from '../pages/locations/location-view';
 import { ModalObjPage }  from '../pages/locations/objective-view';
@@ -23,6 +25,7 @@ import { Locations } from '../providers/locations';
 import { Objectives } from '../providers/objectives';
 import { Users } from '../providers/users';
 import { Messages } from '../providers/messages';
+import { Settings } from '../providers/settings';
 
 import { LocationTracker } from '../providers/location-tracker';
 
@@ -47,6 +50,7 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     UsersPage,
     ModalAddUserPage,
     ModalViewUserPage,
+    SettingsPage,
     TruncatePipe
   ],
   imports: [
@@ -68,7 +72,8 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     ModalObjDetailsPage,
     UsersPage,
     ModalAddUserPage,
-    ModalViewUserPage
+    ModalViewUserPage,
+    SettingsPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -77,7 +82,8 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     Locations,
     Objectives,
     Users,
-    Messages
+    Messages,
+    Settings
   ]
 })
 export class AppModule {}

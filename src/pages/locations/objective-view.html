@@ -1,14 +1,14 @@
 <ion-header>
-<ion-toolbar>
-  <ion-title>
-    Objective Info
-  </ion-title>
-  <ion-buttons start>
-    <button ion-button (click)="dismissObjective()">
-      <ion-icon name="close-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Close Objective</span>
-    </button>
-  </ion-buttons>
-</ion-toolbar>
+  <ion-toolbar>
+    <ion-title>
+      Objective Info
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismissObjective()">
+        <ion-icon name="close-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Close Objective</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
 <ion-list>
@@ -41,15 +41,18 @@
         </button>
       </p>
     </ion-item>
+    <ion-item *ngIf="coordinates">
+      <p>
+        Coordinates: <strong>{{coordinates}}</strong><br />
+        <span *ngIf="outOfRange" color="danger">
+          <strong>Out of range</strong>
+        </span>
+      </p>
+    </ion-item>
     <ion-item *ngIf="pathForLastImage">
       <p>
         Latest Picture:<br>
         <img [src]="pathForLastImage" style="width: 100%">
-      </p>
-    </ion-item>
-    <ion-item *ngIf="coordinates">
-      <p>
-        Coordinates: <strong>{{coordinates}}</strong>
       </p>
     </ion-item>
     <ion-item *ngIf="this.config.DEBUG || (coordinates && pathForLastImage)">
@@ -57,7 +60,7 @@
       <ion-input type="text" [(ngModel)]="comment" value=""></ion-input>
     </ion-item>
 
-    <ion-item *ngIf="this.config.DEBUG || (coordinates && pathForLastImage)">
+    <ion-item *ngIf="this.config.DEBUG || (coordinates && pathForLastImage && !outOfRange)">
       <p>
         <button ion-button (click)="completeObjective()">
           Complete objective

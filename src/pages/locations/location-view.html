@@ -38,7 +38,7 @@
             <img *ngIf="item.objective_photo" src="{{item.objective_photo}}">
           </ion-avatar>
 
-    		  <button ion-button (click)="openObjectiveModal({obj: item}, slidingItem)" [disabled]="(item.completed == 'y') || ((item.multiple == 'n') && (item.mt_completions.length > 0))">
+    		  <button ion-button (click)="openObjectiveModal({obj: item, location: location}, slidingItem)" [disabled]="(item.completed == 'y') || ((item.multiple == 'n') && (item.mt_completions.length > 0))">
     			   {{item.title}}
     		  </button>
 
@@ -73,7 +73,7 @@
           <img *ngIf="item.objective_photo" src="{{item.objective_photo}}">
         </ion-avatar>
 
-        <button ion-button (click)="openObjectiveModal({obj: item})" [disabled]="(item.completed == 'y') || ((item.multiple == 'n') && (item.mt_completions.length > 0))">
+        <button ion-button (click)="openObjectiveModal({obj: item, location: location})" [disabled]="(item.completed == 'y') || ((item.multiple == 'n') && (item.mt_completions.length > 0))">
            {{item.title}}
         </button>
 
