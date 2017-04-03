@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, NavParams, ModalController, AlertController, ToastController, Events } from 'ionic-angular';
-import { Geolocation, Geoposition } from 'ionic-native';
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 import { LocationTracker } from '../../providers/location-tracker';
 
@@ -67,7 +67,8 @@ export class LocationsPage {
         public alertCtrl: AlertController,
         public toastCtrl: ToastController,
         public events: Events,
-        private envConfiguration: EnvConfigurationProvider<ITestAppEnvConfiguration>
+        private envConfiguration: EnvConfigurationProvider<ITestAppEnvConfiguration>,
+        private geolocationProvider: Geolocation
     ) {
         if (!this.authservice.isLoggedin && !this.authservice.AuthToken) {
             this.navCtrl.setRoot(Login);
@@ -239,7 +240,7 @@ export class LocationsPage {
                 this.reloadMyLoc = false;
             }
 
-            this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+            this.watch = this.geolocationProvider.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
 
                 console.log('location tracker position:')
                 console.log(position.coords.latitude + ', ' + position.coords.longitude);

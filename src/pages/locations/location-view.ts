@@ -197,12 +197,17 @@ export class ModalContentPage {
 
     listenToCompletedEvent() {
         this.events.subscribe('objective:completed', (objective_completion) => {
+          this.zone.run(() => {
             for (var i in this.location['mt_objectives']) {
                 if (this.location['mt_objectives'][i].id == objective_completion.objective_id) {
+                    console.log('changing objective completed status and photo:');
+                    var randNo = Math.random();
+                    console.log(this.config.WS_ENDPOINT + 'uploads/' + objective_completion.objective_photo + '?' + randNo);
                     this.location['mt_objectives'][i].completed = 'y';
-                    this.location['mt_objectives'][i].objective_photo = this.config.WS_ENDPOINT + 'uploads/' + objective_completion.objective_photo;
+                    this.location['mt_objectives'][i].objective_photo = this.config.WS_ENDPOINT + 'uploads/' + objective_completion.objective_photo + '?' + randNo;
                 }
             }
+          });
         });
     }
 

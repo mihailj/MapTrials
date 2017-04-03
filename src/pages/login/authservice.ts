@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { MenuController } from 'ionic-angular';
 
+import { PushObject } from '@ionic-native/push';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 
@@ -21,7 +23,7 @@ export class AuthService {
     AuthToken; AuthScope; UserId;
     UserInfo: User;
     config: ITestAppEnvConfiguration;
-    pushService: any;
+    pushService: PushObject;
     deviceId: string;
 
     constructor(public http: Http,

@@ -3,6 +3,7 @@ import { NavController, NavParams, ToastController } from 'ionic-angular';
 
 import { Settings } from '../../providers/settings';
 
+import { AuthService } from '../login/authservice';
 /*
   Generated class for the Settings page.
 
@@ -25,9 +26,21 @@ export class SettingsPage {
         public navParams: NavParams,
         public toastCtrl: ToastController,
         private zone: NgZone,
-        private settingsProvider: Settings) {
+        private settingsProvider: Settings,
+        private authservice: AuthService) {
 
         this.loadSettings();
+    }
+
+
+    ionViewCanEnter(): boolean {
+        // here we can either return true or false
+        // depending on if we want to leave this view
+        if (!this.authservice.isLoggedin || !this.authservice.AuthToken || (this.authservice.AuthScope != 'admin')) {
+          return false;
+        } else {
+          return true;
+        }
     }
 
     ionViewDidLoad() {

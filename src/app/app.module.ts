@@ -1,5 +1,16 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+
+import { Geolocation } from '@ionic-native/geolocation';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { Push, PushObject } from '@ionic-native/push';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
+import { FilePath } from '@ionic-native/file-path';
+
 import { MyApp } from './app.component';
 import { Page1 } from '../pages/page1/page1';
 import { Login } from '../pages/login/login';
@@ -78,6 +89,15 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     AuthService,
+    BackgroundGeolocation,
+    StatusBar,
+    SplashScreen,
+    Geolocation,
+    Push,
+    Camera,
+    File,
+    Transfer,
+    FilePath,
     LocationTracker,
     Locations,
     Objectives,

@@ -1,7 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform, AlertController, Events } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
-import { Push } from 'ionic-native';
+//import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+
+//import { Push } from 'ionic-native';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 import { Page1 } from '../pages/page1/page1';
 import { Login } from '../pages/login/login';
@@ -39,7 +43,10 @@ export class MyApp {
   constructor(public platform: Platform,
               public authservice: AuthService,
               public alertCtrl: AlertController,
-              private events: Events) {
+              private events: Events,
+              private push: Push,
+              private statusBar: StatusBar,
+              private splashScreen: SplashScreen) {
     this.initializeApp();
     this.listenToLoginEvents();
 
@@ -57,6 +64,7 @@ export class MyApp {
     this.settingsPage = {title: 'Settings', component: SettingsPage, icon: 'settings'};
   }
 
+
   initializeApp() {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -66,29 +74,47 @@ export class MyApp {
       }
       else {
         // setup push notifications
-        this.authservice.pushService = Push.init({
-           android: {
-               senderID: '773099066790'
-           },
-           ios: {
-               alert: 'true',
-               badge: true,
-               sound: 'false'
-           },
-           windows: {}
-        });
 
-        this.authservice.pushService.on('registration', (data) => {
-          console.log("device token ->", data.registrationId);
+
+        var pushOpt: PushOptions = {
+          android: {
+              senderID: '773099066790'
+          },
+          ios: {
+              alert: 'true',
+              badge: true,
+              sound: 'false'
+          },
+          windows: {}
+        };
+
+        //var pushObject = new PushObject(pushOpt);
+
+        var pushObject: PushObject = this.push.init(pushOpt);
+
+        //console.log(pushObject);
+
+        this.authservice.pushService = pushObject;
+
+        this.authservice.pushService.on('registration').subscribe(dataReg => {
+
+          console.log('push registration:');
+          console.log(dataReg);
+
+          var data: any = dataReg;
+
+          //console.log("device token ->", data.registrationId);
           //TODO - send device token to server
 
           this.authservice.deviceId = data.registrationId;
 
         });
 
-        this.authservice.pushService.on('notification', (data) => {
+        this.authservice.pushService.on('notification').subscribe(dataNotif => {
           console.log('push notification data:');
-          console.log(data);
+          console.log(dataNotif);
+
+          var data: any = dataNotif;
 
           //if user using app and push notification comes
           if (data.additionalData.foreground) {
@@ -125,16 +151,20 @@ export class MyApp {
             }
 
           }
+
         });
-        this.authservice.pushService.on('error', (e) => {
-          console.log(e.message);
+        this.authservice.pushService.on('error').subscribe(e => {
+          console.log('push service error:');
+          console.log(e);
+          //console.log(e.message);
         });
       }
+    //}
 
-      StatusBar.styleDefault();
-      Splashscreen.show();
+      this.statusBar.styleDefault();
+      this.splashScreen.show();
       setTimeout(() => {
-        Splashscreen.hide();
+        this.splashScreen.hide();
       }, 2500);
     });
   }

@@ -37,7 +37,15 @@
     <allow-navigation href="http://192.168.0.158:8100" />
     <allow-navigation href="http://192.168.0.157:8100" />
     <plugin name="cordova-plugin-request-location-accuracy" spec="~2.2.0" />
-    <plugin name="cordova-plugin-geolocation" spec="~2.4.1" />
     <plugin name="cordova-plugin-mauron85-background-geolocation" spec="~2.2.5" />
     <plugin name="cordova-plugin-android-permissions" spec="~0.10.0" />
+    <plugin name="phonegap-plugin-push" spec="~1.10.0">
+        <variable name="SENDER_ID" value="773099066790" />
+    </plugin>
+    <plugin name="cordova-plugin-geolocation" spec="~2.4.1" />
+    <plugin name="cordova-plugin-file" spec="~4.3.1" />
+    <plugin name="cordova-plugin-file-transfer" spec="~1.6.1" />
+    <plugin name="cordova-plugin-filepath" spec="~1.0.2" />
+    <plugin name="cordova-plugin-compat" spec="~1.1.0" />
+    <plugin name="cordova-plugin-camera" spec="~2.3.1" />
 </widget>

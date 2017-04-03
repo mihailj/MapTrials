@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { NavParams, Platform, ViewController, ToastController, LoadingController, Loading, Events, AlertController } from 'ionic-angular';
-import { Geolocation, Camera, File, Transfer, FilePath } from 'ionic-native';
+import { Geolocation } from '@ionic-native/geolocation';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
+import { FilePath } from '@ionic-native/file-path';
 
 /*import { LocationTracker } from '../../providers/location-tracker';*/
 
@@ -65,7 +69,12 @@ export class ModalObjPage {
         public authservice: AuthService,
         public events: Events,
         private settingsProvider: Settings,
-        public alertCtrl: AlertController
+        public alertCtrl: AlertController,
+        private geolocationProvider: Geolocation,
+        private camera: Camera,
+        private file: File,
+        private transfer: Transfer,
+        private filePath: FilePath
     ) {
         //console.log('objective id: ' + this.params.get('obj').id);
         this.objective = this.params.get('obj');
@@ -93,7 +102,7 @@ export class ModalObjPage {
     geolocateObjective() {
 
         this.zone.run(() => {
-            Geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }).then((position) => {
+            this.geolocationProvider.getCurrentPosition({ enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }).then((position) => {
 
                 console.log(position);
 
@@ -146,15 +155,15 @@ export class ModalObjPage {
     takePicture(sourceType) {
         let srcType: number;
         if (sourceType == 'camera') {
-            srcType = Camera.PictureSourceType.CAMERA;
+            srcType = this.camera.PictureSourceType.CAMERA;
         } else {
-            srcType = Camera.PictureSourceType.PHOTOLIBRARY;
+            srcType = this.camera.PictureSourceType.PHOTOLIBRARY;
         }
 
         this.zone.run(() => {
 
-            Camera.getPicture({
-                destinationType: Camera.DestinationType.FILE_URI,
+            this.camera.getPicture({
+                destinationType: this.camera.DestinationType.FILE_URI,
                 correctOrientation: true,
                 sourceType: srcType,
                 saveToPhotoAlbum: false
@@ -166,8 +175,8 @@ export class ModalObjPage {
                 //this.base64Image = "data:image/jpeg;base64," + imageData;
                 console.log('imagePath:');
                 console.log(imagePath);
-                if (this.platform.is('android') && srcType === Camera.PictureSourceType.PHOTOLIBRARY) {
-                    FilePath.resolveNativePath(imagePath)
+                if (this.platform.is('android') && srcType === this.camera.PictureSourceType.PHOTOLIBRARY) {
+                    this.filePath.resolveNativePath(imagePath)
                         .then(filePath => {
 
                             console.log('photolibrary filePath:' + filePath);
@@ -208,7 +217,7 @@ export class ModalObjPage {
 
         this.zone.run(() => {
 
-            File.copyFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(success => {
+            this.file.copyFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(success => {
                 console.log('newFilename: ' + newFileName);
                 this.lastImage = newFileName;
                 this.pathForLastImage = this.pathForImage(newFileName);
@@ -305,15 +314,21 @@ export class ModalObjPage {
 
         console.log('targetPath: ' + targetPath);
 
-        const fileTransfer = new Transfer();
+        //const fileTransfer = new Transfer();
+        const fileTransfer: TransferObject = this.transfer.create();
 
         this.loading = this.loadingCtrl.create({
             content: 'Uploading...',
         });
         this.loading.present();
 
+        console.log('start upload file');
+
         // Use the FileTransfer to upload the image
         fileTransfer.upload(targetPath, url, options).then(data => {
+
+            console.log('upload file completed, publish objective:completed event with data:');
+            console.log(objective_completion);
 
             this.events.publish('objective:completed', objective_completion);
 

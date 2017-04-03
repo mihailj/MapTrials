@@ -34,6 +34,14 @@ export class MessagesPage {
               public zone: NgZone,
               public authservice: AuthService) {}
 
+  ionViewCanEnter(): boolean {
+      if (!this.authservice.isLoggedin || !this.authservice.AuthToken) {
+          return false;
+      } else {
+          return true;
+      }
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad MessagesPage');
 
