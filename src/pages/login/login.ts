@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { AuthService } from './authservice';
 
 import { NavController, AlertController, Events, LoadingController } from 'ionic-angular';
@@ -11,10 +13,12 @@ import { Page1 } from '../page1/page1';
 })
 export class Login {
 
+  loginForm: FormGroup;
+
 	usercreds = {
      name: '',
      password: '',
-	   user_type: 'user'
+	   user_type: ''
 	};
 
   loading: any;
@@ -23,66 +27,90 @@ export class Login {
               public authservice: AuthService,
               public alertCtrl: AlertController,
               public loadingCtrl: LoadingController,
-              private events: Events) {
+              private events: Events,
+              public formBuilder: FormBuilder) {
+      this.loginForm = formBuilder.group({
+          usertype: ['', Validators.required],
+          username: ['', Validators.required],
+          password: ['', Validators.required]
+      });
   }
 
-  login(user) {
-    this.presentLoading();
+  login(userForm) {
 
-		this.authservice.authenticate(user).then(data => {
-      this.loading.dismiss().catch(() => {});
-			console.log('user authenticate ionic data:');
-			console.log(data);
+    //console.log(user);
 
-      if (data.ok) {
+    if (this.loginForm.dirty && this.loginForm.valid) {
 
-        this.events.publish('user:login');
+      this.usercreds.name = this.loginForm.value.username;
+      this.usercreds.password = this.loginForm.value.password;
+      this.usercreds.user_type = this.loginForm.value.usertype;
 
-        // save device id to logged in user
-	       this.authservice.setdevice_id(data.user, this.authservice.deviceId).then(data => {
+      this.presentLoading();
 
-         });
-        this.navCtrl.setRoot(Page1);
-      } else {
-				console.log('user authservice authenticate data = false');
+  		this.authservice.authenticate(this.usercreds).then(data => {
+        this.loading.dismiss().catch(() => {});
+  			console.log('user authenticate ionic data:');
+  			console.log(data);
 
-        let msg = 'Connection error, please try again later.';
+        if (data.ok) {
 
-        if (data._body) {
+          this.events.publish('user:login');
 
-          console.log('data._body:');
-          console.log(data._body);
+          // save device id to logged in user
+  	       this.authservice.setdevice_id(data.user, this.authservice.deviceId).then(data => {
 
-          if (data._body.type && data._body.type == 'error') {
-            msg = 'Connection error, please try again later.';
-          } else {
-            // decode JSON
-            let dcd = JSON.parse(data._body);
+           });
+          this.navCtrl.setRoot(Page1);
+        } else {
+  				console.log('user authservice authenticate data = false');
 
-            console.log('JSON.parse(data._body):');
-            console.log(JSON.parse(data._body));
+          let msg = 'Connection error, please try again later.';
 
-            if (dcd.message) {
-              msg = 'Login incorrect, please try again!';
+          if (data._body) {
+
+            console.log('data._body:');
+            console.log(data._body);
+
+            if (data._body.type && data._body.type == 'error') {
+              msg = 'Connection error, please try again later.';
+            } else {
+              // decode JSON
+              let dcd = JSON.parse(data._body);
+
+              console.log('JSON.parse(data._body):');
+              console.log(JSON.parse(data._body));
+
+              if (dcd.message) {
+                msg = 'Login incorrect, please try again!';
+              }
             }
           }
-        }
 
+  				var alert = this.alertCtrl.create({
+  					title: 'Login Error',
+  					message: msg, //'Login incorrect, please try again!',
+  					buttons: ['ok']
+  				});
+
+  				alert.present();
+  			}
+  		}).catch(error => {
+        this.loading.dismiss().catch(() => {});
+
+  			console.log('user authservice authenticate catch error');
+  			console.log(error)
+  		});
+    }
+    else {
 				var alert = this.alertCtrl.create({
 					title: 'Login Error',
-					message: msg, //'Login incorrect, please try again!',
+					message: 'Please complete all login fields!', //'Login incorrect, please try again!',
 					buttons: ['ok']
 				});
 
 				alert.present();
-			}
-		}).catch(error => {
-      this.loading.dismiss().catch(() => {});
-
-			console.log('user authservice authenticate catch error');
-			console.log(error)
-		});
-
+    }
   }
 
   presentLoading() {

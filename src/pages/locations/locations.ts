@@ -279,7 +279,7 @@ export class LocationsPage {
 
         console.log(this.map);
 
-        this.map.setOptions({ draggableCursor: 'crosshair' });
+        this.map.setOptions({ draggableCursor: 'crosshair', disableDoubleClickZoom: true });
 
         this.presentToast('Add location enabled, double tap on map in the desired place.');
 
@@ -291,7 +291,7 @@ export class LocationsPage {
 
     disableAddMarker() {
         this.addMarkerEnabled = false;
-        this.map.setOptions({ draggableCursor: undefined });
+        this.map.setOptions({ draggableCursor: undefined, disableDoubleClickZoom: false });
 
         this.presentToast('Add location disabled.');
 
