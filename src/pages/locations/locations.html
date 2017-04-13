@@ -13,8 +13,9 @@
       Map
     </ion-title>
     <ion-buttons end>
-      <button *ngIf="(scope == 'admin') && !addMarkerEnabled" ion-button (click)="enableAddMarker()"><ion-icon name="add-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Enable Add Location</span></button>
-      <button *ngIf="(scope == 'admin') && addMarkerEnabled" ion-button (click)="disableAddMarker()"><ion-icon name="remove-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Cancel Add Location</span></button>
+      <button *ngIf="(scope == 'admin') && !addMarkerEnabled && !finishMarkerEnabled" ion-button (click)="enableAddMarker()"><ion-icon name="add-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Enable Add Location</span></button>
+      <button *ngIf="(scope == 'admin') && addMarkerEnabled && !finishMarkerEnabled" ion-button (click)="disableAddMarker(false)"><ion-icon name="remove-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Cancel Add Location</span></button>
+      <button *ngIf="(scope == 'admin') && !addMarkerEnabled && finishMarkerEnabled" ion-button (click)="finishAddMarker()"><ion-icon name="checkmark-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Finish Add Location</span></button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, NavParams, ModalController, AlertController, ToastController, Events } from 'ionic-angular';
+import { Platform, NavController, NavParams, ModalController, AlertController, ToastController, Events } from 'ionic-angular';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 import { LocationTracker } from '../../providers/location-tracker';
@@ -49,10 +49,13 @@ export class LocationsPage {
     scope: string;
 
     addMarkerEnabled: boolean = false;
+    finishMarkerEnabled: boolean = false;
 
     config: ITestAppEnvConfiguration;
 
     myMarker: any;
+    newMarker: any;
+    newMarkerData: any;
 
     public watch: any;
 
@@ -68,7 +71,8 @@ export class LocationsPage {
         public toastCtrl: ToastController,
         public events: Events,
         private envConfiguration: EnvConfigurationProvider<ITestAppEnvConfiguration>,
-        private geolocationProvider: Geolocation
+        private geolocationProvider: Geolocation,
+        private platform: Platform
     ) {
         if (!this.authservice.isLoggedin && !this.authservice.AuthToken) {
             this.navCtrl.setRoot(Login);
@@ -104,28 +108,34 @@ export class LocationsPage {
 
         var me = this;
 
-        var permissions = cordova.plugins.permissions;
+        if (this.platform.is('android')) {
 
-        permissions.hasPermission(permissions.ACCESS_FINE_LOCATION, function(status) {
-          console.log(status);
-          if (!status.hasPermission) {
-            permissions.requestPermission(permissions.ACCESS_FINE_LOCATION, function() {
-              me.enableLocation();
-            }, function(error){
-              console.log(error);
-              var alert = me.alertCtrl.create({
-                  title: 'Location Error',
-                  message: 'You must enable Location Services (GPS) to use Map.',
-                  buttons: ['ok']
+          var permissions = cordova.plugins.permissions;
+
+          permissions.hasPermission(permissions.ACCESS_FINE_LOCATION, function(status) {
+            console.log(status);
+            if (!status.hasPermission) {
+              permissions.requestPermission(permissions.ACCESS_FINE_LOCATION, function() {
+                me.enableLocation();
+              }, function(error){
+                console.log(error);
+                var alert = me.alertCtrl.create({
+                    title: 'Location Error',
+                    message: 'You must enable Location Services (GPS) to use Map.',
+                    buttons: ['ok']
+                });
+
+                alert.present();
               });
+            } else {
+              me.enableLocation();
+            }
 
-              alert.present();
-            });
-          } else {
-            me.enableLocation();
-          }
-
-        }, null);
+          }, null);
+        }
+        else {
+          me.enableLocation();
+        }
         /*this.loadMap();*/
 
     }
@@ -135,35 +145,41 @@ export class LocationsPage {
 
       var me = this;
       // use cordova plugin
-      cordova.plugins.locationAccuracy.canRequest(function(canRequest) {
-          if (canRequest) {
-              cordova.plugins.locationAccuracy.request(function() {
-                  console.log("Request successful");
-                  me.loadMap();
-              }, function(error) {
-                  console.error("Request failed");
-                  console.log(error);
 
-                  var alert = me.alertCtrl.create({
-                      title: 'Location Error',
-                      message: 'You must enable Location Services (GPS) to use Map.',
-                      buttons: ['ok']
-                  });
+      if (this.platform.is('android')) {
 
-                  alert.present();
-                  /*if(error){
-                      // Android only
-                      console.error("error code="+error.code+"; error message="+error.message);
-                      if(error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED){
-                          if(window.confirm("Failed to automatically set Location Mode to 'High Accuracy'. Would you like to switch to the Location Settings page and do this manually?")){
-                              cordova.plugins.diagnostic.switchToLocationSettings();
-                          }
-                      }
-                  }*/
-              }, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY // iOS will ignore this
-              );
-          }
-      });
+        cordova.plugins.locationAccuracy.canRequest(function(canRequest) {
+            if (canRequest) {
+                cordova.plugins.locationAccuracy.request(function() {
+                    console.log("Request successful");
+                    me.loadMap();
+                }, function(error) {
+                    console.error("Request failed");
+                    console.log(error);
+
+                    var alert = me.alertCtrl.create({
+                        title: 'Location Error',
+                        message: 'You must enable Location Services (GPS) to use Map.',
+                        buttons: ['ok']
+                    });
+
+                    alert.present();
+                    /*if(error){
+                        // Android only
+                        console.error("error code="+error.code+"; error message="+error.message);
+                        if(error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED){
+                            if(window.confirm("Failed to automatically set Location Mode to 'High Accuracy'. Would you like to switch to the Location Settings page and do this manually?")){
+                                cordova.plugins.diagnostic.switchToLocationSettings();
+                            }
+                        }
+                    }*/
+                }, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY // iOS will ignore this
+                );
+            }
+          });
+        } else {
+          me.loadMap();
+        }
     }
     ionViewDidEnter() {
         //this.locationTracker.startTracking();
@@ -184,7 +200,9 @@ export class LocationsPage {
         console.log('loadMap');
         console.log('reloadMyLocation: ' + reloadMyLocation);
 
-        this.locationTracker.startTracking();
+        if (!this.platform.is('core')) {
+          this.locationTracker.startTracking();
+        }
 
         var bounds = new google.maps.LatLngBounds();
 
@@ -289,11 +307,15 @@ export class LocationsPage {
 
     }
 
-    disableAddMarker() {
+    disableAddMarker(finish: boolean = false) {
         this.addMarkerEnabled = false;
         this.map.setOptions({ draggableCursor: undefined, disableDoubleClickZoom: false });
 
-        this.presentToast('Add location disabled.');
+        if (finish) {
+          this.presentToast('Add location disabled. Drag the marker to its final position and tap confirm.');
+        } else {
+          this.presentToast('Add location disabled.');
+        }
 
         google.maps.event.clearListeners(this.map, 'dblclick');
     }
@@ -343,6 +365,32 @@ export class LocationsPage {
         this.map.panTo(this.myMarker.position);
     }
 
+    finishAddMarker() {
+      this.locationsProvider.save(this.newMarkerData).subscribe(location => {
+
+        console.log(location);
+
+        this.newMarker.setDraggable(false);
+
+        this.addMarkerEnabled = true;
+        this.finishMarkerEnabled = false;
+
+        location['mt_objectives'] = [];
+
+        this.locations.push(location);
+
+
+        this.newMarker.addListener('click', () => {
+            console.log('new_marker_click');
+            this.openLocationModal({ loc: location });
+        });
+
+        //this.disableAddMarker();
+
+        this.presentToast('Location saved!');
+      });
+    }
+
     presentConfirm(position) {
 
         console.log(position.lat());
@@ -376,30 +424,50 @@ export class LocationsPage {
                             longitude: position.lng()
                         };
 
-                        this.locationsProvider.save(datt).subscribe(location => {
+                        this.newMarkerData = datt;
+
+                        console.log(this.newMarkerData);
+
+                        //this.locationsProvider.save(datt).subscribe(location => {
 
                             let marker = new google.maps.Marker({
                                 map: this.map,
                                 animation: google.maps.Animation.DROP,
                                 position: position,
+                                draggable: true,
                                 icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
                             });
 
+                            var me = this;
 
-                            marker.addListener('click', () => {
-                                console.log('new_marker_click');
-                                this.openLocationModal({ loc: location });
+                            google.maps.event.addListener(marker, 'dragend', function(marker){
+                                var latLng = marker.latLng;
+
+                                let currentLatitude = latLng.lat();
+                                let currentLongitude = latLng.lng();
+
+                                me.newMarkerData.latitude = currentLatitude;
+                                me.newMarkerData.longitude = currentLongitude;
+
+                                /*jQ("#latitude").val(currentLatitude);
+                                jQ("#longitude").val(currentLongitude);*/
+                                console.log(currentLatitude + ', ' + currentLongitude);
                             });
 
-                            location['mt_objectives'] = [];
+                            this.newMarker = marker;
 
-                            this.locations.push(location);
+                            this.addMarkerEnabled = false;
+                            this.finishMarkerEnabled = true;
 
-                            this.disableAddMarker();
+                            //location['mt_objectives'] = [];
 
-                            this.presentToast('Location saved!');
+                            //this.locations.push(location);
 
-                        });
+                            this.disableAddMarker(true);
+
+                            //this.presentToast('Location saved!');
+
+                        //});
                     }
                 }
             ]
