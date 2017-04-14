@@ -13,9 +13,9 @@
       Map
     </ion-title>
     <ion-buttons end>
-      <button *ngIf="(scope == 'admin') && !addMarkerEnabled && !finishMarkerEnabled" ion-button (click)="enableAddMarker()"><ion-icon name="add-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Enable Add Location</span></button>
-      <button *ngIf="(scope == 'admin') && addMarkerEnabled && !finishMarkerEnabled" ion-button (click)="disableAddMarker(false)"><ion-icon name="remove-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Cancel Add Location</span></button>
-      <button *ngIf="(scope == 'admin') && !addMarkerEnabled && finishMarkerEnabled" ion-button (click)="finishAddMarker()"><ion-icon name="checkmark-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Finish Add Location</span></button>
+      <custom-button *ngIf="(scope == 'admin') && !addMarkerEnabled && !finishMarkerEnabled" icon="add-circle" text="Enable Add Location" (notify)="enableAddMarker()"></custom-button>
+      <custom-button *ngIf="(scope == 'admin') && addMarkerEnabled && !finishMarkerEnabled" icon="remove-circle" text="Cancel Add Location" (notify)="disableAddMarker(false)"></custom-button>
+      <custom-button *ngIf="(scope == 'admin') && !addMarkerEnabled && finishMarkerEnabled" icon="checkmark-circle" text="Finish Add Location" (notify)="finishAddMarker()"></custom-button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -33,6 +33,9 @@
         <img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"> No objectives at location<br>
         <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png"> Objectives not completed<br>
         <img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png"> All objectives completed
+        <ng-template [ngIf]="scope == 'admin'">
+          <br><img src="http://maps.google.com/mapfiles/ms/icons/purple-dot.png"> New location
+        </ng-template>
       </div>
     </ion-fab-list>
   </ion-fab>

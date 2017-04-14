@@ -4,9 +4,7 @@
       Objective Completion
     </ion-title>
     <ion-buttons start>
-      <button ion-button (click)="dismiss()">
-		      <ion-icon name="close-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Close Objective</span>
-      </button>
+      <custom-button icon="close-circle" text="Close Objective" (notify)="dismiss()"></custom-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

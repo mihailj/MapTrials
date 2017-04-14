@@ -1,4 +1,7 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
+
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { Geolocation } from '@ionic-native/geolocation';
@@ -42,6 +45,8 @@ import { LocationTracker } from '../providers/location-tracker';
 
 import { TruncatePipe } from '../pipes/truncate';
 
+import { CustomButton } from '../components/custom-button/custom-button';
+
 // Import the config module
 import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
 
@@ -62,9 +67,12 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     ModalAddUserPage,
     ModalViewUserPage,
     SettingsPage,
-    TruncatePipe
+    TruncatePipe,
+    CustomButton
   ],
   imports: [
+    BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp),
     GLIonic2EnvConfigurationModule
   ],

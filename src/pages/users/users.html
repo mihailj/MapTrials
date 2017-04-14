@@ -11,7 +11,7 @@
     </button>
     <ion-title>Users</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="addUserModal()"><ion-icon name="add-circle"></ion-icon><span color="primary">&nbsp;Add User</span></button>
+      <custom-button icon="add-circle" text="Add User" (notify)="addUserModal()"></custom-button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

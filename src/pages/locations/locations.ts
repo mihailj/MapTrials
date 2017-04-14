@@ -372,13 +372,14 @@ export class LocationsPage {
 
         this.newMarker.setDraggable(false);
 
-        this.addMarkerEnabled = true;
+        this.addMarkerEnabled = false;
         this.finishMarkerEnabled = false;
 
         location['mt_objectives'] = [];
 
         this.locations.push(location);
 
+        this.newMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
 
         this.newMarker.addListener('click', () => {
             console.log('new_marker_click');
@@ -435,7 +436,7 @@ export class LocationsPage {
                                 animation: google.maps.Animation.DROP,
                                 position: position,
                                 draggable: true,
-                                icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+                                icon: 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png'
                             });
 
                             var me = this;

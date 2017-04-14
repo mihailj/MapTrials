@@ -11,7 +11,7 @@
     </button>
     <ion-title>Messages</ion-title>
     <ion-buttons end *ngIf="authservice.AuthScope == 'admin'">
-      <button ion-button (click)="newMessageModal()"><ion-icon name="add-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;New Message</span></button>
+      <custom-button icon="add-circle" text="New Message" (notify)="newMessageModal()"></custom-button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -39,7 +39,7 @@
         Received messages
       </h2>
     </ion-item>
-
+<ng-template *ngIf="messages_received">
     <ion-item-sliding *ngFor="let item of messages_received" #slidingItem>
       <ion-item>
   		  <button ion-button (click)="openMessageModal({msg: item, reply: true})">
@@ -66,7 +66,7 @@
         </button>
       </ion-item-options>
     </ion-item-sliding>
-
+</ng-template>
   </ion-list>
 
   <ion-list *ngSwitchCase="'sent'">
@@ -76,6 +76,8 @@
         Sent messages
       </h2>
     </ion-item>
+
+  <ng-template *ngIf="messages_sent">
 
     <ion-item-sliding *ngFor="let item of messages_sent" #slidingItem>
       <ion-item>
@@ -98,6 +100,9 @@
         </button>
       </ion-item-options>
     </ion-item-sliding>
+
+</ng-template>
+
   </ion-list>
 
   </div>

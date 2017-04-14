@@ -4,9 +4,7 @@
       Location Info
     </ion-title>
     <ion-buttons start>
-      <button ion-button (click)="dismiss()">
-		      <ion-icon name="close-circle"></ion-icon><span color="primary" showWhen="android,windows">&nbsp;Close Location</span>
-      </button>
+      <custom-button icon="close-circle" text="Close Location" (notify)="dismiss()"></custom-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -31,7 +29,7 @@
       </button>
     </ion-item>
 
-    <template [ngIf]="scope == 'admin'">
+    <ng-template [ngIf]="scope == 'admin'">
       <ion-item-sliding *ngFor="let item of location['mt_objectives']" #slidingItem>
         <ion-item>
           <ion-avatar item-left>
@@ -65,9 +63,9 @@
           </button>
         </ion-item-options>
       </ion-item-sliding>
-    </template>
+    </ng-template>
 
-    <template [ngIf]="scope != 'admin'">
+    <ng-template [ngIf]="scope != 'admin'">
       <ion-item *ngFor="let item of location['mt_objectives']">
         <ion-avatar item-left>
           <img *ngIf="item.objective_photo" src="{{item.objective_photo}}">
@@ -83,7 +81,7 @@
            Score: <strong>{{item.score}}</strong>
         </ion-note>
       </ion-item>
-    </template>
+    </ng-template>
 
   </ion-list>
 </ion-content>
