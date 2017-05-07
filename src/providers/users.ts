@@ -41,6 +41,16 @@ export class Users {
   	return this.http.get(this.config.WS_ENDPOINT + 'users', {headers: headers}).map(res => <User[]>res.json());
   }
 
+  get(id): Observable<User> {
+
+  	var headers = new Headers();
+  	this.authservice.loadUserCredentials();
+  	console.log(this.authservice.AuthToken);
+  	headers.append('Authorization', 'Bearer ' + this.authservice.AuthToken);
+
+  	return this.http.get(this.config.WS_ENDPOINT + 'users/' + id + '?tracking_sessions=1', {headers: headers}).map(res => <User>res.json());
+  }
+
   save(data) {
   	var headers = new Headers();
   	this.authservice.loadUserCredentials();

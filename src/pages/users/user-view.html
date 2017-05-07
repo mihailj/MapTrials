@@ -9,19 +9,38 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <h2>
-        <ion-icon name="person"></ion-icon>
-        {{user.username}}
-      </h2>
 
-      <ion-note item-right>
-         Score: <strong>{{user.score}}</strong>
-      </ion-note>
-    </ion-item>
-  </ion-list>
-  <ion-list>
+
+    <ion-list>
+      <ion-item>
+        <h2>
+          <ion-icon name="person"></ion-icon>
+          {{user.username}}
+        </h2>
+
+        <ion-note item-right>
+           Score: <strong>{{user.score}}</strong>
+        </ion-note>
+      </ion-item>
+    </ion-list>
+
+  <div padding>
+    <ion-segment [(ngModel)]="category">
+      <ion-segment-button value="objectives">
+        Objectives
+      </ion-segment-button>
+      <ion-segment-button value="tracking">
+        Tracking
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+
+<div [ngSwitch]="category">
+
+  <div *ngSwitchCase="'objectives'">
+
+  <ion-list *ngIf="user.mt_completions">
     <ion-list-header>
       Completed objectives ({{user.objectives_completed}})
     </ion-list-header>
@@ -55,4 +74,21 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+  </div>
+
+  <ion-list *ngSwitchCase="'tracking'">
+    <ion-list-header>
+      Tracking sessions
+    </ion-list-header>
+    <div *ngIf="user.mt_tracking_sessions.length > 0">
+    <ion-item-sliding *ngFor="let tracking_sess of user.mt_tracking_sessions">
+      <ion-item>
+        <button ion-button (click)="openTrackingSessionModal({obj: tracking_sess})">
+           {{tracking_sess.date_start | date: 'dd/MM/yyyy HH:mm:ss'}} - <span ion-text *ngIf="tracking_sess.date_end">{{tracking_sess.date_end | date: 'dd/MM/yyyy HH:mm:ss'}}</span><span ion-text *ngIf="!tracking_sess.date_end">in progress</span>
+        </button>
+      </ion-item>
+    </ion-item-sliding>
+    </div>
+  </ion-list>
+</div>
 </ion-content>

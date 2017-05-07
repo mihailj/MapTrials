@@ -1,9 +1,12 @@
 import { Component, NgZone } from '@angular/core';
-import { NavParams, ViewController, ToastController, AlertController, Events } from 'ionic-angular';
+import { NavParams, NavController, ViewController, ToastController, AlertController, ModalController, Events } from 'ionic-angular';
 
 import { User } from '../../models/user';
 
+import { Users } from '../../providers/users';
 import { Objectives } from '../../providers/objectives';
+
+import { ModalTrackingSessionPage } from './tracking-session';
 
 // Import the config module
 import { EnvConfigurationProvider } from "gl-ionic2-env-configuration";
@@ -18,6 +21,7 @@ import { ITestAppEnvConfiguration } from "../../env-configuration/ITestAppEnvCon
 export class ModalViewUserPage {
   user: User;
   config: ITestAppEnvConfiguration;
+  public category: string = "objectives";
 
   constructor(public params: NavParams,
               /*public objectivesProvider: Objectives,*/
@@ -25,13 +29,19 @@ export class ModalViewUserPage {
               private envConfiguration: EnvConfigurationProvider<ITestAppEnvConfiguration>,
               public toastCtrl: ToastController,
               public alertCtrl: AlertController,
+              private navCtrl: NavController,
               public zone: NgZone,
               public events: Events,
-              public objectivesProvider: Objectives) {
+              public objectivesProvider: Objectives,
+              private usersProvider: Users,
+              public modalCtrl: ModalController) {
 
     this.config = envConfiguration.getConfig();
+
     this.user = this.params.get('obj');
 
+    this.loadUser(this.params.get('obj').id);
+/*
     if (this.user.mt_completions.length > 0) {
       for (var i in this.user.mt_completions) {
         var objective_photo = './assets/images/no_image.png';
@@ -42,30 +52,30 @@ export class ModalViewUserPage {
 
         this.user.mt_completions[i].objective_photo = objective_photo;
       }
-    }
+    }*/
     //this.loadObjective(this.params.get('obj'));
     //this.objective = {id: null, title:'', score: 0, distance: 0, completed:'', objective_photo:'', mt_completions: [], mt_user: { id: null, username: '', score: 0, objectives_completed: 0, mt_completions: [] }};
   }
-/*
-  loadObjective(obj) {
-		this.objectivesProvider.get(obj.id).subscribe(objective => {
 
-        if (objective.mt_completions.length > 0) {
-          for (var i in objective.mt_completions) {
+  loadUser(id) {
+		this.usersProvider.get(id).subscribe(user => {
+
+        if (user.mt_completions.length > 0) {
+          for (var i in this.user.mt_completions) {
             var objective_photo = './assets/images/no_image.png';
 
-            if (objective.mt_completions[i].objective_photo) {
-              objective_photo =  this.config.WS_ENDPOINT + 'uploads/' + objective.mt_completions[i].objective_photo;
+            if (user.mt_completions[i].objective_photo) {
+              objective_photo =  this.config.WS_ENDPOINT + 'uploads/' + user.mt_completions[i].objective_photo;
             }
 
-            objective.mt_completions[i].objective_photo = objective_photo;
+            user.mt_completions[i].objective_photo = objective_photo;
           }
         }
 
-        console.log(objective);
-        this.objective = objective;
+        console.log(user);
+        this.user = user;
 		});
-  }*/
+  }
 
   deleteCompletion(obj) {
     //console.log('delete ojective');
@@ -123,6 +133,12 @@ export class ModalViewUserPage {
     alert.present();
 
 
+  }
+
+  openTrackingSessionModal(obj) {
+    //let modal = this.modalCtrl.create(ModalTrackingSessionPage, obj);
+    //modal.present();
+    this.navCtrl.push(ModalTrackingSessionPage, obj)
   }
 
 	private presentToast(text) {

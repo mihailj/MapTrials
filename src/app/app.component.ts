@@ -16,6 +16,7 @@ import { SettingsPage } from '../pages/settings/settings';
 
 import { AuthService } from '../pages/login/authservice';
 
+import { LocationTracker } from '../providers/location-tracker';
 
 interface defPage {
   title: string,
@@ -46,7 +47,8 @@ export class MyApp {
               private events: Events,
               private push: Push,
               private statusBar: StatusBar,
-              private splashScreen: SplashScreen) {
+              private splashScreen: SplashScreen,
+              private locationTracker: LocationTracker) {
     this.initializeApp();
     this.listenToLoginEvents();
 
@@ -181,6 +183,12 @@ export class MyApp {
 
 
 	menuLogout() {
+    if (this.locationTracker.watch) {
+      this.locationTracker.watch.unsubscribe();
+    }
+    
+    this.locationTracker.stopTracking();
+
 		this.authservice.logout();
 
     this.events.publish('user:logout');

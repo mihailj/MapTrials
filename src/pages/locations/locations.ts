@@ -14,6 +14,8 @@ import { Locations } from '../../providers/locations';
 
 import { ModalContentPage } from './location-view';
 
+import { Tracking } from '../../providers/tracking';
+
 import 'rxjs/add/operator/filter';
 
 declare var google;
@@ -57,7 +59,7 @@ export class LocationsPage {
     newMarker: any;
     newMarkerData: any;
 
-    public watch: any;
+    //public watch: any;
 
     reloadMyLoc: boolean = false;
 
@@ -72,7 +74,8 @@ export class LocationsPage {
         public events: Events,
         private envConfiguration: EnvConfigurationProvider<ITestAppEnvConfiguration>,
         private geolocationProvider: Geolocation,
-        private platform: Platform
+        private platform: Platform,
+        private tracking: Tracking
     ) {
         if (!this.authservice.isLoggedin && !this.authservice.AuthToken) {
             this.navCtrl.setRoot(Login);
@@ -186,8 +189,10 @@ export class LocationsPage {
     }
 
     ionViewWillLeave() {
-        this.watch.unsubscribe();
-        this.locationTracker.stopTracking();
+        // TODO: check if user tracking disabled before stopping tracking on leave from Map page
+
+        //this.locationTracker.watch.unsubscribe();
+        //this.locationTracker.stopTracking();
     }
 
     openLocationModal(characterNum) {
@@ -258,10 +263,23 @@ export class LocationsPage {
                 this.reloadMyLoc = false;
             }
 
-            this.watch = this.geolocationProvider.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+            if (this.locationTracker.watch) {
+              this.locationTracker.watch.unsubscribe();
+            }
 
-                console.log('location tracker position:')
+            this.locationTracker.watch = this.geolocationProvider.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+
+                console.log('location tracker position in MAP page:');
                 console.log(position.coords.latitude + ', ' + position.coords.longitude);
+
+                if (this.authservice.UserInfo.mt_tracking_sessions && (this.authservice.UserInfo.mt_tracking_sessions.length > 0) && (this.authservice.UserInfo.mt_tracking_sessions[0].date_end == null))
+                {
+                  this.locationTracker.startTracking(true);
+                  this.tracking.track(this.authservice.UserInfo.mt_tracking_sessions[0].id, position.coords.latitude, position.coords.longitude).subscribe(track => {
+                     console.log('location tracker subscribe data in MAP page:');
+                     console.log(track);
+                  });
+                }
 
                 let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 

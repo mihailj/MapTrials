@@ -2,6 +2,10 @@ import { Injectable, NgZone } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import 'rxjs/add/operator/filter';
+
+import { AuthService } from '../pages/login/authservice';
+import { Tracking } from './tracking';
+
 //import 'rxjs/add/operator/map';
 
 /*
@@ -15,12 +19,17 @@ export class LocationTracker {
 
   public lat: number = 0;
   public lng: number = 0;
+  public watch: any;
 
-  constructor(public zone: NgZone, public platform: Platform, private backgroundGeolocation: BackgroundGeolocation) {
+  constructor(public zone: NgZone,
+              public platform: Platform,
+              private backgroundGeolocation: BackgroundGeolocation,
+              private authservice: AuthService,
+              private tracking: Tracking) {
 
   }
 
-  startTracking() {
+  startTracking(log: boolean = false) {
     // Background Tracking
 
     let config: BackgroundGeolocationConfig = {
@@ -47,7 +56,12 @@ export class LocationTracker {
 
     },*/ config).subscribe((location: BackgroundGeolocationResponse) => {
 
-      console.log('BackgroundGeolocation:  ' + location.latitude + ',' + location.longitude);
+      console.log('BackgroundGeolocation in LocationTracker provider:  ' + location.latitude + ',' + location.longitude);
+
+      if (log) {
+          this.tracking.track(this.authservice.UserInfo.mt_tracking_sessions[0].id, location.latitude, location.longitude).subscribe(track => {
+          });
+      }
 
       // Run update inside of Angular's zone
       this.zone.run(() => {

@@ -25,6 +25,7 @@ import { ModalViewMessagePage } from '../pages/messages/message-view';
 import { UsersPage } from '../pages/users/users';
 import { ModalAddUserPage } from '../pages/users/user-add';
 import { ModalViewUserPage } from '../pages/users/user-view';
+import { ModalTrackingSessionPage } from '../pages/users/tracking-session';
 
 import { SettingsPage } from '../pages/settings/settings';
 
@@ -40,6 +41,7 @@ import { Objectives } from '../providers/objectives';
 import { Users } from '../providers/users';
 import { Messages } from '../providers/messages';
 import { Settings } from '../providers/settings';
+import { Tracking } from '../providers/tracking';
 
 import { LocationTracker } from '../providers/location-tracker';
 
@@ -66,6 +68,7 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     UsersPage,
     ModalAddUserPage,
     ModalViewUserPage,
+    ModalTrackingSessionPage,
     SettingsPage,
     TruncatePipe,
     CustomButton
@@ -92,6 +95,7 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     UsersPage,
     ModalAddUserPage,
     ModalViewUserPage,
+    ModalTrackingSessionPage,
     SettingsPage
   ],
   providers: [
@@ -111,7 +115,8 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     Objectives,
     Users,
     Messages,
-    Settings
+    Settings,
+    Tracking
   ]
 })
 export class AppModule {}

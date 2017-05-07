@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
-
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavController, AlertController, Events, LoadingController } from 'ionic-angular';
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 import { AuthService } from './authservice';
 
-import { NavController, AlertController, Events, LoadingController } from 'ionic-angular';
-
 import { Page1 } from '../page1/page1';
+
+import { LocationTracker } from '../../providers/location-tracker';
+
+import { Tracking } from '../../providers/tracking';
 
 @Component({
     templateUrl: 'login.html'
@@ -28,7 +31,10 @@ export class Login {
               public alertCtrl: AlertController,
               public loadingCtrl: LoadingController,
               private events: Events,
-              public formBuilder: FormBuilder) {
+              public formBuilder: FormBuilder,
+              public locationTracker: LocationTracker,
+              private geolocationProvider: Geolocation,
+              private tracking: Tracking) {
       this.loginForm = formBuilder.group({
           usertype: ['', Validators.required],
           username: ['', Validators.required],
@@ -57,11 +63,42 @@ export class Login {
 
           this.events.publish('user:login');
 
+           this.authservice.getinfo().then(data => {
+             console.log('login getinfo:');
+             console.log(this.authservice.UserInfo);
+
+             if (this.authservice.UserInfo.mt_tracking_sessions && (this.authservice.UserInfo.mt_tracking_sessions.length > 0) && (this.authservice.UserInfo.mt_tracking_sessions[0].date_end == null))
+             {
+               this.locationTracker.startTracking(true);
+
+               let options = {
+                   frequency: 3000,
+                   enableHighAccuracy: true
+               };
+
+               this.locationTracker.watch = this.geolocationProvider.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+                 console.log('location tracker position in LOGIN page:');
+                 console.log(position.coords.latitude + ', ' + position.coords.longitude);
+
+                 this.tracking.track(this.authservice.UserInfo.mt_tracking_sessions[0].id, position.coords.latitude, position.coords.longitude).subscribe(track => {
+
+                    //console.log('location tracker subscribe data in LOGIN page:');
+                    //console.log(track);
+
+                 });
+               });
+             }
+
+             // redirect to user profile page
+             this.navCtrl.setRoot(Page1);
+
+           });
+
           // save device id to logged in user
   	       this.authservice.setdevice_id(data.user, this.authservice.deviceId).then(data => {
 
            });
-          this.navCtrl.setRoot(Page1);
+
         } else {
   				console.log('user authservice authenticate data = false');
 

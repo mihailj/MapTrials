@@ -26,10 +26,11 @@
       </h2>
     </ion-item>
 
-    <ion-item-sliding *ngFor="let item of users">
+    <ion-item-sliding *ngFor="let item of users; let i = index;">
       <ion-item>
   		  <button ion-button (click)="openUserModal({obj: item})">
   			   {{item.username}}
+           <span ion-text *ngIf="item.isTracking">&nbsp;<ion-icon name="eye"></ion-icon></span>
   		  </button>
         <ion-note item-right>
            Score: <strong>{{item.score}}</strong>
@@ -37,11 +38,19 @@
       </ion-item>
 
       <ion-item-options>
+        <button ion-button (click)="startTrackUser(item, i)" color="secondary" *ngIf="!item.isTracking">
+            <ion-icon name="eye"></ion-icon>
+            Start tracking
+        </button>
+        <button ion-button (click)="stopTrackUser(item, i)" color="primary" *ngIf="item.isTracking">
+            <ion-icon name="eye-off"></ion-icon>
+            Stop tracking
+        </button>
         <button ion-button (click)="editUser(item)" color="light">
             <ion-icon name="paper"></ion-icon>
             Edit
         </button>
-        <button ion-button (click)="deleteUser(item)" color="danger">
+        <button ion-button (click)="deleteUser(item, i)" color="danger">
             <ion-icon name="trash"></ion-icon>
             Delete
         </button>

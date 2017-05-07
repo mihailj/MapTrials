@@ -26,8 +26,10 @@ export class Page1 {
 		//if (!this.authservice.isLoggedin || !this.authservice.AuthToken) {
 			//this.navCtrl.setRoot(Login);
 		//} else {
-      this.UserInfo = {id: null, username: null, score: 0, objectives_completed: 0, mt_completions: []};
-      this.getinfo();
+      //this.UserInfo = {id: null, username: null, score: 0, objectives_completed: 0, mt_completions: []};
+      this.UserInfo = this.authservice.UserInfo;
+
+      //this.getinfo();
     //}
 	}
 
