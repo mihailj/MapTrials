@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { AlertController, ModalController, NavController, NavParams, ToastController, Events } from 'ionic-angular';
+import { AlertController, ModalController, NavController, NavParams, ItemSliding, ToastController, Events } from 'ionic-angular';
 
 import { AuthService } from '../login/authservice';
 
@@ -41,7 +41,7 @@ export class UsersPage {
 
         this.loadUsers();
         this.listenToDeletedCompletionEventUsers();
-
+        this.listenToReloadUsersEvent();
     }
 
     ionViewCanEnter(): boolean {
@@ -82,6 +82,15 @@ export class UsersPage {
             });
 
         });
+    }
+
+    listenToReloadUsersEvent() {
+      this.events.subscribe('users:reload', () => {
+          console.log('EVENT users:reload received in users page');
+          this.zone.run(() => {
+              this.loadUsers();
+          });
+      });
     }
 
     addUserModal() {
@@ -146,7 +155,11 @@ export class UsersPage {
         modal.present();
     }
 
-    startTrackUser(user, i) {
+    startTrackUser(user, i, slidingItem: ItemSliding) {
+
+      if (slidingItem) {
+        slidingItem.close();
+      }
 
         this.trackingProvider.start_session(user).subscribe(sess => {
 
@@ -160,10 +173,15 @@ export class UsersPage {
         });
     }
 
-    stopTrackUser(user, i) {
+    stopTrackUser(user, i, slidingItem: ItemSliding) {
+
+      if (slidingItem) {
+        slidingItem.close();
+      }
+
         console.log(user);
 
-        this.trackingProvider.end_session(user).subscribe(sess => {
+        this.trackingProvider.end_session(user.mt_tracking_sessions[0].id).subscribe(sess => {
 
             console.log(sess);
 

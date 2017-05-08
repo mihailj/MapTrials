@@ -81,12 +81,24 @@
       Tracking sessions
     </ion-list-header>
     <div *ngIf="user.mt_tracking_sessions.length > 0">
-    <ion-item-sliding *ngFor="let tracking_sess of user.mt_tracking_sessions">
+    <ion-item-sliding *ngFor="let tracking_sess of user.mt_tracking_sessions; let i = index;" #slidingItem>
       <ion-item>
         <button ion-button (click)="openTrackingSessionModal({obj: tracking_sess})">
-           {{tracking_sess.date_start | date: 'dd/MM/yyyy HH:mm:ss'}} - <span ion-text *ngIf="tracking_sess.date_end">{{tracking_sess.date_end | date: 'dd/MM/yyyy HH:mm:ss'}}</span><span ion-text *ngIf="!tracking_sess.date_end">in progress</span>
+           {{tracking_sess.date_start | date: 'dd/MM/yyyy HH:mm:ss'}} -
+           <span ion-text *ngIf="tracking_sess.date_end">&nbsp;{{tracking_sess.date_end | date: 'dd/MM/yyyy HH:mm:ss'}}</span><span ion-text *ngIf="!tracking_sess.date_end">&nbsp;in progress</span>
         </button>
       </ion-item>
+
+      <ion-item-options>
+        <button ion-button (click)="stopTrackingSession(tracking_sess, i)" color="primary" *ngIf="!tracking_sess.date_end">
+            <ion-icon name="eye-off"></ion-icon>
+            Stop tracking
+        </button>
+        <button ion-button (click)="deleteTrackingSession(tracking_sess, i)" color="danger">
+            <ion-icon name="trash"></ion-icon>
+            Delete
+        </button>
+      </ion-item-options>
     </ion-item-sliding>
     </div>
   </ion-list>

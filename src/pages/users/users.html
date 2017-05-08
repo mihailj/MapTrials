@@ -26,7 +26,7 @@
       </h2>
     </ion-item>
 
-    <ion-item-sliding *ngFor="let item of users; let i = index;">
+    <ion-item-sliding *ngFor="let item of users; let i = index;" #slidingItem>
       <ion-item>
   		  <button ion-button (click)="openUserModal({obj: item})">
   			   {{item.username}}
@@ -38,11 +38,11 @@
       </ion-item>
 
       <ion-item-options>
-        <button ion-button (click)="startTrackUser(item, i)" color="secondary" *ngIf="!item.isTracking">
+        <button ion-button (click)="startTrackUser(item, i, slidingItem)" color="secondary" *ngIf="!item.isTracking">
             <ion-icon name="eye"></ion-icon>
             Start tracking
         </button>
-        <button ion-button (click)="stopTrackUser(item, i)" color="primary" *ngIf="item.isTracking">
+        <button ion-button (click)="stopTrackUser(item, i, slidingItem)" color="primary" *ngIf="item.isTracking">
             <ion-icon name="eye-off"></ion-icon>
             Stop tracking
         </button>

@@ -45,9 +45,9 @@ export class Tracking {
 
     }
 
-    end_session(user) {
+    end_session(session_id) {
 
-      var session_id = user.mt_tracking_sessions[0].id;
+      //var session_id = user.mt_tracking_sessions[0].id;
       var data = {};
 
     	var headers = new Headers();
@@ -85,6 +85,16 @@ export class Tracking {
       headers.append('Authorization', 'Bearer ' + this.authservice.AuthToken);
 
       return this.http.get(this.config.WS_ENDPOINT + 'tracking_sessions/' + session_id, {headers: headers}).map(res => <any>res.json());
+
+    }
+
+    delete(session_id) {
+      var headers = new Headers();
+      this.authservice.loadUserCredentials();
+      //console.log(this.authservice.AuthToken);
+      headers.append('Authorization', 'Bearer ' + this.authservice.AuthToken);
+
+      return this.http.delete(this.config.WS_ENDPOINT + 'tracking_sessions/' + session_id, {headers: headers}).map(res => <any>res.json());
 
     }
 

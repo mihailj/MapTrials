@@ -5,6 +5,7 @@ import { User } from '../../models/user';
 
 import { Users } from '../../providers/users';
 import { Objectives } from '../../providers/objectives';
+import { Tracking } from '../../providers/tracking';
 
 import { ModalTrackingSessionPage } from './tracking-session';
 
@@ -34,7 +35,8 @@ export class ModalViewUserPage {
               public events: Events,
               public objectivesProvider: Objectives,
               private usersProvider: Users,
-              public modalCtrl: ModalController) {
+              public modalCtrl: ModalController,
+              private trackingProvider: Tracking) {
 
     this.config = envConfiguration.getConfig();
 
@@ -135,10 +137,69 @@ export class ModalViewUserPage {
 
   }
 
+  stopTrackingSession(obj, i) {
+    this.trackingProvider.end_session(obj.id).subscribe(sess => {
+
+        console.log('tracking session stopped data:');
+        console.log(sess);
+
+        this.user.mt_tracking_sessions[i] = sess;
+
+        this.events.publish('users:reload');
+        console.log('EVENT users:reload send from user-view page');
+        
+        //this.users[i].isTracking = false;
+        //this.users[i].mt_tracking_sessions = [];
+
+        this.presentToast('User tracking stopped!');
+
+    });
+  }
+
+  deleteTrackingSession(obj, i) {
+    let alert = this.alertCtrl.create({
+        title: 'Confirm delete tracking session',
+        message: 'Are you sure that you want to delete the selected tracking session?',
+        buttons: [
+            {
+                text: 'Cancel',
+                role: 'cancel',
+                handler: () => {
+                    console.log('Cancel clicked');
+                }
+            },
+            {
+                text: 'Delete',
+                handler: () => {
+
+                    this.zone.run(() => {
+
+                        this.trackingProvider.delete(obj.id).subscribe(tracking_sessions => {
+
+                            console.log('tracking sessions delete data:');
+                            console.log(tracking_sessions);
+
+                            this.user.mt_tracking_sessions.splice(i, 1);
+
+                            this.presentToast('Tracking session deleted!');
+
+                        });
+
+                    });
+
+
+                }
+            }
+        ]
+    });
+
+    alert.present();
+  }
+
   openTrackingSessionModal(obj) {
-    //let modal = this.modalCtrl.create(ModalTrackingSessionPage, obj);
-    //modal.present();
-    this.navCtrl.push(ModalTrackingSessionPage, obj)
+    let modal = this.modalCtrl.create(ModalTrackingSessionPage, obj);
+    modal.present();
+    //this.navCtrl.push(ModalTrackingSessionPage, obj)
   }
 
 	private presentToast(text) {
