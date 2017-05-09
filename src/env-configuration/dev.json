@@ -1,4 +1,5 @@
 {
   "WS_ENDPOINT": "https://192.168.166.166:8888/",
+  "TRACKING_URL": "ws://192.168.166.166:3005",
   "DEBUG": true
 }

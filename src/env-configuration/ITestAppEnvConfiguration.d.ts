@@ -4,6 +4,7 @@
 
 export interface ITestAppEnvConfiguration {
   WS_ENDPOINT: string,
+  TRACKING_URL: string,
   DEBUG: boolean/*,
   optionalParam?: string*/
 }

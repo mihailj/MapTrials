@@ -1,4 +1,5 @@
 {
   "WS_ENDPOINT": "http://maptrials.juganaru.eu/",
+  "TRACKING_URL": "ws://maptrials.juganaru.eu:3005",
   "DEBUG": false
 }

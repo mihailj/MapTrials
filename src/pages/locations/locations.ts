@@ -13,8 +13,11 @@ import { Location } from '../../models/location';
 import { Locations } from '../../providers/locations';
 
 import { ModalContentPage } from './location-view';
+import { ModalViewUserPage } from '../users/user-view';
 
 import { Tracking } from '../../providers/tracking';
+
+import { RTTService } from '../../providers/rtt-service';
 
 import 'rxjs/add/operator/filter';
 
@@ -28,6 +31,10 @@ import { EnvConfigurationProvider } from "gl-ionic2-env-configuration";
 // Import your configuration typings
 // You can specify a typing for your configuration to get nice and neat autocompletion
 import { ITestAppEnvConfiguration } from "../../env-configuration/ITestAppEnvConfiguration";
+
+/*interface IDictionary {
+    [key: string]: any;
+};*/
 
 /*
   Generated class for the Locations page.
@@ -63,6 +70,9 @@ export class LocationsPage {
 
     reloadMyLoc: boolean = false;
 
+    trackedUser = new Array<any>();
+    //trackedUser: IDictionary;
+
     constructor(public navCtrl: NavController,
         public authservice: AuthService,
         public navParams: NavParams,
@@ -75,7 +85,8 @@ export class LocationsPage {
         private envConfiguration: EnvConfigurationProvider<ITestAppEnvConfiguration>,
         private geolocationProvider: Geolocation,
         private platform: Platform,
-        private tracking: Tracking
+        private tracking: Tracking,
+        private RTTServ: RTTService
     ) {
         if (!this.authservice.isLoggedin && !this.authservice.AuthToken) {
             this.navCtrl.setRoot(Login);
@@ -84,14 +95,8 @@ export class LocationsPage {
 
         this.config = envConfiguration.getConfig();
 
-        // test location services
-        /*Geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }).then((position) => {
-          console.log(position);
-        }, (err) => {
-          console.log(err);
-        });*/
-
         this.listenToMapReloadEvent();
+
     }
 
     ionViewCanEnter(): boolean {
@@ -200,6 +205,11 @@ export class LocationsPage {
         modal.present();
     }
 
+    openUserModal(obj) {
+      let modal = this.modalCtrl.create(ModalViewUserPage, { obj: obj });
+      modal.present();
+    }
+
     loadMap(reloadMyLocation: boolean = false) {
 
         console.log('loadMap');
@@ -278,7 +288,10 @@ export class LocationsPage {
                   this.tracking.track(this.authservice.UserInfo.mt_tracking_sessions[0].id, position.coords.latitude, position.coords.longitude).subscribe(track => {
                      console.log('location tracker subscribe data in MAP page:');
                      console.log(track);
+
+                     this.RTTServ.tracking_data.next({ user_id: this.authservice.UserId, latitude: position.coords.latitude, longitude: position.coords.longitude });
                   });
+
                 }
 
                 let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -308,6 +321,36 @@ export class LocationsPage {
             });
 
         });
+
+        if (this.authservice.AuthScope == 'admin') {
+          this.RTTServ.tracking_data.subscribe(data => {
+            console.log('real time tracking data:');
+            console.log(data);
+
+            let latLng = new google.maps.LatLng(data.latitude, data.longitude);
+
+            if (data.user_id in this.trackedUser) {
+              this.trackedUser[data.user_id].setPosition(latLng);
+            } else {
+              let markerIcon = 'http://maps.google.com/mapfiles/ms/micons/man.png';
+
+              this.trackedUser[data.user_id] = new google.maps.Marker({
+                  map: this.map,
+                  animation: google.maps.Animation.DROP,
+                  position: latLng,
+                  icon: markerIcon,
+              });
+
+
+              this.trackedUser[data.user_id].addListener('click', () => {
+                  console.log('user_marker_click');
+
+                  this.openUserModal({ id: data.user_id });
+              });
+            }
+
+  		    });
+        }
     }
 
     enableAddMarker() {

@@ -30,11 +30,13 @@
     <ion-fab-list side="left">
       <div class="legend">
         <strong><u>Map Legend</u></strong><br><br>
+        <img src="http://maps.google.com/mapfiles/ms/micons/horsebackriding.png"> Your position<br>
         <img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"> No objectives at location<br>
         <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png"> Objectives not completed<br>
         <img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png"> All objectives completed
         <ng-template [ngIf]="scope == 'admin'">
-          <br><img src="http://maps.google.com/mapfiles/ms/icons/purple-dot.png"> New location
+          <br><img src="http://maps.google.com/mapfiles/ms/icons/purple-dot.png"> New location<br>
+          <img src="http://maps.google.com/mapfiles/ms/micons/man.png"> Tracked users location
         </ng-template>
       </div>
     </ion-fab-list>

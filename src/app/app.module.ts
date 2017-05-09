@@ -52,6 +52,9 @@ import { CustomButton } from '../components/custom-button/custom-button';
 // Import the config module
 import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
 
+import { WebSocketService } from '../providers/web-socket-service';
+import { RTTService } from '../providers/rtt-service';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -116,7 +119,9 @@ import { GLIonic2EnvConfigurationModule } from 'gl-ionic2-env-configuration';
     Users,
     Messages,
     Settings,
-    Tracking
+    Tracking,
+    WebSocketService,
+    RTTService
   ]
 })
 export class AppModule {}
